@@ -31,7 +31,6 @@ export
     #Proportion
 
 importall BioCore
-import BGZFStreams: BGZFStream
 import BioSymbols: ispurine, ispyrimidine
 import BioSequences:
     Alphabet,
@@ -41,8 +40,8 @@ import BioSequences:
     MinHashSketch,
     Certain,
     Mismatch,
-    Match
-import BufferedStreams: BufferedStreams, BufferedInputStream
+    Match,
+    Site
 import IntervalTrees: Interval, IntervalValue
 import Twiddle:
     enumerate_nibbles,
@@ -56,7 +55,7 @@ import Twiddle:
 #include("site_counting/site_types/site_types.jl")
 #include("distances/dist.jl")
 include("vcf/vcf.jl")
-#include("bcf/bcf.jl")
+include("bcf/bcf.jl")
 #include("mash.jl")
 
 end # Module GeneticVariation
