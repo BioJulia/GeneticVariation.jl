@@ -19,7 +19,7 @@ export
 
     # VCF and BCF
     VCF,
-    #BCF,
+    BCF,
     header,
     metainfotag,
     metainfoval,
