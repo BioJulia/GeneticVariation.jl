@@ -9,6 +9,7 @@
 module BCF
 
 import BioCore: BioCore, isfilled
+import GeneticVariation.VCF
 import BGZFStreams
 import BufferedStreams
 

@@ -8,7 +8,7 @@
 
 immutable Reader{T<:IO} <: BioCore.IO.AbstractReader
     version::Tuple{UInt8,UInt8}  # (major, minor)
-    header::GeneticVariation.VCF.Header
+    header::VCF.Header
     stream::BGZFStreams.BGZFStream{T}
 end
 
@@ -39,7 +39,7 @@ function Reader(input::IO)
     data = read(stream, l_header)
 
     # parse VCF header
-    vcfreader = GeneticVariation.VCF.Reader(BufferedStreams.BufferedInputStream(data))
+    vcfreader = VCF.Reader(BufferedStreams.BufferedInputStream(data))
 
     return Reader((major, minor), vcfreader.header, stream)
 end
