@@ -6,7 +6,7 @@
 # This file is a part of BioJulia.
 # License is MIT: https://github.com/BioJulia/GeneticVariation.jl/blob/master/LICENSE
 
-type Writer{T<:IO} <: Bio.IO.AbstractWriter
+type Writer{T<:IO} <: BioCore.IO.AbstractWriter
     stream::BGZFStreams.BGZFStream{T}
 end
 
@@ -17,7 +17,7 @@ Create a data writer of the BCF file format.
 * `output`: data sink
 * `header`: VCF header object
 """
-function Writer(output::IO, header::Bio.Var.VCF.Header)
+function Writer(output::IO, header::VCF.Header)
     stream = BGZFStreams.BGZFStream(output, "w")
     write(stream, b"BCF\x02\x02")
     buf = IOBuffer()
@@ -32,7 +32,7 @@ function Writer(output::IO, header::Bio.Var.VCF.Header)
     return Writer(stream)
 end
 
-function Bio.IO.stream(writer::Writer)
+function BioCore.IO.stream(writer::Writer)
     return writer.stream
 end
 
