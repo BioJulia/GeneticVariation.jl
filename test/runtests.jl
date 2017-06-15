@@ -14,6 +14,7 @@ function get_bio_fmt_specimens()
 end
 
 include("vcf.jl")
+include("bcf.jl")
 
 
 end # Module TestGeneticVariation
