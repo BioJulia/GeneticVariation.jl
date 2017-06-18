@@ -33,6 +33,7 @@ export
 importall BioCore
 import BioSymbols: ispurine, ispyrimidine
 import BioSequences:
+    BioSequences,
     Alphabet,
     DNAAlphabet,
     RNAAlphabet,

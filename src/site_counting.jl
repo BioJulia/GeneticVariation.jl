@@ -39,6 +39,13 @@ A<->T, G<->T, G<->C.
 """
 immutable Transversion <: Mutation end
 
+# BioSequences.count_sites_bitpar extension
+# -----------------------------------------
+
+@inline BioSequences.bp_counter_type{M<:Mutation,A<:Alphabet}(::Type{M}, ::Type{A}) = Tuple{Int, Int}
+@inline BioSequences.bp_start_counter{M<:Mutation,A<:Alphabet}(::Type{M}, ::Type{A}) = Int(0), Int(0)
+@inline BioSequences.bp_update_counter(acc::Tuple{Int,Int}, up::Tuple{Int,Int}) = acc[1] + up[1], acc[2] + up[2]
+
 # Bitparallel counting
 # --------------------
 
