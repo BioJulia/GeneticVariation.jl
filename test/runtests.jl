@@ -15,6 +15,7 @@ end
 
 include("vcf.jl")
 include("bcf.jl")
+include("site_counting.jl")
 
 
 end # Module TestGeneticVariation
