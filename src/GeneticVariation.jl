@@ -41,7 +41,8 @@ import BioSequences:
     Certain,
     Mismatch,
     Match,
-    Site
+    Position
+import Compat: @compat
 import IntervalTrees: Interval, IntervalValue
 import Twiddle:
     enumerate_nibbles,

@@ -6,7 +6,7 @@
 # This file is a part of BioJulia.
 # License is MIT: https://github.com/BioJulia/GeneticVariation.jl/blob/master/LICENSE.md
 
-@compat abstract type Mutation <: Site end
+@compat abstract type Mutation <: Position end
 
 """
 A `Conserved` site describes a site where two aligned nucleotides are definately
