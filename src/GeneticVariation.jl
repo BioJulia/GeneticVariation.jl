@@ -12,8 +12,8 @@ module GeneticVariation
 
 export
     # Site types
-    #Conserved,
-    #Mutated,
+    Conserved,
+    Mutated,
     #Transition,
     #Transversion,
 
