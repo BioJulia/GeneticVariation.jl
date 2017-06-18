@@ -41,7 +41,8 @@ import BioSequences:
     Certain,
     Mismatch,
     Match,
-    Position
+    Position,
+    bp_chunk_count
 import Compat: @compat
 import IntervalTrees: Interval, IntervalValue
 import Twiddle:
