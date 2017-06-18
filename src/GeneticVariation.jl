@@ -56,6 +56,7 @@ import Twiddle:
 #include("distances/dist.jl")
 include("vcf/vcf.jl")
 include("bcf/bcf.jl")
+include("site_counting.jl")
 #include("mash.jl")
 
 end # Module GeneticVariation
