@@ -28,8 +28,8 @@
 
             # 2 bit encoded sequences
             seqA, seqB = generate_possibilities_tester(alphset[2])
-            @test count(Conserved, seqA, seqB) == count(Conserved, seqB, seqA) == length(alphabet(alphset[2]))
-            @test count(Mutated, seqA, seqB) == count(Mutated, seqB, seqA) == (length(seqA) - length(alphabet(alphset[2])))
+            @test count(Conserved, seqA, seqB) == count(Conserved, seqB, seqA) == 4
+            @test count(Mutated, seqA, seqB) == count(Mutated, seqB, seqA) == 6
         end
     end
 end
