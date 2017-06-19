@@ -57,21 +57,21 @@
         @inline function testcount{P<:BioSequences.Position}(::Type{P}, a::BioSequence, b::BioSequence)
             k, c = 0, 0
             @inbounds for idx in 1:min(endof(a), endof(b))
-                b = !(isambiguous(a[idx]) || isambiguous(b[idx]))
-                k += (issite(P, a, b, idx) && b)
-                c += b
+                isvalid = !(isgap(a[idx]) || isgap(b[idx])) && !(isambiguous(a[idx]) || isambiguous(b[idx]))
+                k += issite(P, a, b, idx) && isvalid
+                c += isvalid
             end
             return k, c
         end
-        function testcounting{S<:Site}(::Type{S}, a, b)
+        function testcounting{S<:Site}(::Type{S}, a::BioSequence, b::BioSequence)
             @test count(S, a, b) == count(S, b, a) == testcount(S, a, b)
         end
-        function testcounting2{S<:Site}(::Type{S}, a, b)
+        function testcounting2{S<:Site}(::Type{S}, a::BioSequence, b::BioSequence)
             @test count(S, a, b) == count(S, b, a) == testcount2(S, a, b)
         end
         function testforencs(a::Int, b::Int, subset::Bool)
             for alphabet in (DNAAlphabet, RNAAlphabet)
-                for _ in  1:50
+                for _ in  1:1
                     seqA = random_seq(alphabet{a}, rand(10:100))
                     seqB = random_seq(alphabet{b}, rand(10:100))
                     sa = seqA
