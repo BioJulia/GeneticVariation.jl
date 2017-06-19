@@ -41,6 +41,12 @@
 
     @testset "Randomized tests" begin
         # A test counting function which is naive.
+        @inline function issite(::Type{Conserved}, a::BioSequence, b::BioSequence, idx)
+            return a[idx] == b[idx]
+        end
+        @inline function issite(::Type{Mutated}, a::BioSequence, b::BioSequence, idx)
+            return a[idx] != b[idx]
+        end
         @inline function testcount{P<:BioSequences.Position}(::Type{P}, a::BioSequence, b::BioSequence)
             k = 0
             @inbounds for idx in 1:min(endof(a), endof(b))
@@ -48,18 +54,21 @@
             end
             return k
         end
-
-        @inline function issite(::Type{Conserved}, a::BioSequence, b::BioSequence, idx)
-            return !(isambiguous(a[idx]) || isambiguous(b[idx])) && (a[idx] == b[idx])
+        @inline function testcount2{P<:BioSequences.Position}(::Type{P}, a::BioSequence, b::BioSequence)
+            k, c = 0, 0
+            @inbounds for idx in 1:min(endof(a), endof(b))
+                b = !(isambiguous(a[idx]) || isambiguous(b[idx]))
+                k += (issite(P, a, b, idx) & b)
+                c += b
+            end
+            return k, c
         end
-        @inline function issite(::Type{Mutated}, a::BioSequence, b::BioSequence, idx)
-            return !(isambiguous(a[idx]) || isambiguous(b[idx])) && (a[idx] != b[idx])
-        end
-
         function testcounting{S<:Site}(::Type{S}, a, b)
             @test count(S, a, b) == count(S, b, a) == testcount(S, a, b)
         end
-
+        function testcounting2{S<:Site}(::Type{S}, a, b)
+            @test count(S, a, b) == count(S, b, a) == testcount2(S, a, b)
+        end
         function testforencs(a::Int, b::Int, subset::Bool)
             for alphabet in (DNAAlphabet, RNAAlphabet)
                 for _ in  1:50
@@ -88,8 +97,13 @@
                         sa = subA
                         sb = subB
                     end
-                    testcounting(Conserved, sa, sb)
-                    testcounting(Mutated, sa, sb)
+                    if a == 2 && b == 2
+                        testcounting2(Conserved, sa, sb)
+                        testcounting2(Mutated, sa, sb)
+                    else
+                        testcounting(Conserved, sa, sb)
+                        testcounting(Mutated, sa, sb)
+                    end
                 end
             end
         end
