@@ -16,20 +16,26 @@
             return BioSequence{A}(arra), BioSequence{A}(arrb)
         end
 
-        for alphset in (dna_alphabets, rna_alphabets)
-            # Answers to these tests were worked out manually to verify
-            # counting is working correctly.
-            # seqA and seqB contain all possible observations of sites.
+        @testset "2 bit" begin
+            dnaA, dnaB = generate_possibilities_tester(DNAAlphabet{2})
+            rnaA, rnaB = generate_possibilities_tester(RNAAlphabet{2})
+            
+            @test count(Conserved, dnaA, dnaB) == count(Conserved, dnaB, dnaA) == 4
+            @test count(Mutated, dnaA, dnaB) == count(Mutated, dnaB, dnaA) == 6
 
-            # 4 bit encoded sequences
-            seqA, seqB = generate_possibilities_tester(alphset[1])
-            @test count(Conserved, seqA, seqB) == count(Conserved, seqB, seqA) == length(alphabet(alphset[1]))
-            @test count(Mutated, seqA, seqB) == count(Mutated, seqB, seqA) == (length(seqA) - length(alphabet(alphset[1])))
+            @test count(Conserved, rnaA, rnaB) == count(Conserved, rnaB, rnaA) == 4
+            @test count(Mutated, rnaA, rnaB) == count(Mutated, rnaB, rnaA) == 6
+        end
 
-            # 2 bit encoded sequences
-            seqA, seqB = generate_possibilities_tester(alphset[2])
-            @test count(Conserved, seqA, seqB) == count(Conserved, seqB, seqA) == 4
-            @test count(Mutated, seqA, seqB) == count(Mutated, seqB, seqA) == 6
+        @testset "4 bit" begin
+            dnaA, dnaB = generate_possibilities_tester(DNAAlphabet{4})
+            rnaA, rnaB = generate_possibilities_tester(RNAAlphabet{4})
+
+            @test count(Conserved, dnaA, dnaB) == count(Conserved, dnaB, dnaA) == 0
+            @test count(Mutated, dnaA, dnaB) == count(Mutated, dnaB, dnaA) == 0
+
+            @test count(Conserved, rnaA, rnaB) == count(Conserved, rnaB, rnaA) == 0
+            @test count(Mutated, rnaA, rnaB) == count(Mutated, rnaB, rnaA) == 0
         end
     end
 end
