@@ -64,13 +64,12 @@ for A in (DNAAlphabet, RNAAlphabet)
 
         # Conserved
         @inline bp_chunk_count(::Type{Conserved}, ::Type{$A{2}}, a::UInt64, b::UInt64) = bp_chunk_count(Match, $A{2}, a, b)
+        @inline BioSequences.bp_correct_emptyspace(::Type{Conserved}, ::Type{$A{2}}) = true
 
         @inline function bp_chunk_count(::Type{Conserved}, ::Type{$A{4}}, a::UInt64, b::UInt64)
             k, c = bp_chunk_count(Mutated, $A{4}, a, b)
             return c - k, c
         end
-
-        @inline correct_emptyspace(::Type{Conserved}, ::Type{$A{2}}) = true
 
         # Mutated
         @inline bp_chunk_count(::Type{Mutated}, ::Type{$A{2}}, a::UInt64, b::UInt64) = bp_chunk_count(Mismatch, $A{2}, a, b)
