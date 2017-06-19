@@ -42,7 +42,8 @@ immutable Transversion <: Mutation end
 # BioSequences.count_sites_bitpar extension
 # -----------------------------------------
 
-@inline BioSequences.bp_counter_type{M<:Mutation,A<:Alphabet}(::Type{M}, ::Type{A}) = Tuple{Int, Int}
+@inline BioSequences.bp_counter_type{M<:Mutation}(::Type{M}, ::Type{DNAAlphabet{4}}) = Tuple{Int, Int}
+@inline BioSequences.bp_counter_type{M<:Mutation}(::Type{M}, ::Type{RNAAlphabet{4}}) = Tuple{Int, Int}
 @inline BioSequences.bp_start_counter{M<:Mutation,A<:Alphabet}(::Type{M}, ::Type{A}) = Int(0), Int(0)
 @inline BioSequences.bp_update_counter(acc::Tuple{Int,Int}, up::Tuple{Int,Int}) = acc[1] + up[1], acc[2] + up[2]
 
@@ -61,7 +62,7 @@ for A in (DNAAlphabet, RNAAlphabet)
     @eval begin
 
         # Conserved
-        @inline bp_chunk_count(::Type{Conserved}, ::Type{$A{2}}, a::UInt64, b::UInt64) = count_bitpar(Match, $A{2}, a, b)
+        @inline bp_chunk_count(::Type{Conserved}, ::Type{$A{2}}, a::UInt64, b::UInt64) = bp_chunk_count(Match, $A{2}, a, b)
 
         @inline function bp_chunk_count(::Type{Conserved}, ::Type{$A{4}}, a::UInt64, b::UInt64)
             k, c = bp_chunk_count(Mutated, $A{4}, a, b)
@@ -69,7 +70,6 @@ for A in (DNAAlphabet, RNAAlphabet)
         end
 
         @inline correct_emptyspace(::Type{Conserved}, ::Type{$A{2}}) = true
-
 
         # Mutated
         @inline bp_chunk_count(::Type{Mutated}, ::Type{$A{2}}, a::UInt64, b::UInt64) = bp_chunk_count(Mismatch, $A{2}, a, b)
@@ -80,7 +80,7 @@ for A in (DNAAlphabet, RNAAlphabet)
             return count_nonzero_nibbles(d), count_one_nibbles(m)
         end
 
-
+        # TODO Finish transitions and transversions
         # Transition
         @inline function bp_chunk_count(::Type{Transition}, ::Type{$A{4}}, a::UInt64, b::UInt64)
             m = nibble_mask(Certain, a, b)
