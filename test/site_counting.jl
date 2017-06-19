@@ -19,7 +19,7 @@
         @testset "2 bit" begin
             dnaA, dnaB = generate_possibilities_tester(DNAAlphabet{2})
             rnaA, rnaB = generate_possibilities_tester(RNAAlphabet{2})
-            
+
             @test count(Conserved, dnaA, dnaB) == count(Conserved, dnaB, dnaA) == 4
             @test count(Mutated, dnaA, dnaB) == count(Mutated, dnaB, dnaA) == 6
 
@@ -31,11 +31,11 @@
             dnaA, dnaB = generate_possibilities_tester(DNAAlphabet{4})
             rnaA, rnaB = generate_possibilities_tester(RNAAlphabet{4})
 
-            @test count(Conserved, dnaA, dnaB) == count(Conserved, dnaB, dnaA) == 0
-            @test count(Mutated, dnaA, dnaB) == count(Mutated, dnaB, dnaA) == 0
+            @test count(Conserved, dnaA, dnaB) == count(Conserved, dnaB, dnaA) == (4, 10)
+            @test count(Mutated, dnaA, dnaB) == count(Mutated, dnaB, dnaA) == (6, 10)
 
-            @test count(Conserved, rnaA, rnaB) == count(Conserved, rnaB, rnaA) == 0
-            @test count(Mutated, rnaA, rnaB) == count(Mutated, rnaB, rnaA) == 0
+            @test count(Conserved, rnaA, rnaB) == count(Conserved, rnaB, rnaA) == (4, 10)
+            @test count(Mutated, rnaA, rnaB) == count(Mutated, rnaB, rnaA) == (6, 10)
         end
     end
 end
