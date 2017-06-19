@@ -39,16 +39,9 @@ A<->T, G<->T, G<->C.
 """
 immutable Transversion <: Mutation end
 
-# BioSequences.count_sites_bitpar extension
-# -----------------------------------------
 
-@inline BioSequences.bp_counter_type{M<:Mutation}(::Type{M}, ::Type{DNAAlphabet{4}}) = Tuple{Int, Int}
-@inline BioSequences.bp_counter_type{M<:Mutation}(::Type{M}, ::Type{RNAAlphabet{4}}) = Tuple{Int, Int}
-@inline BioSequences.bp_start_counter{M<:Mutation,A<:Alphabet}(::Type{M}, ::Type{A}) = Int(0), Int(0)
-@inline BioSequences.bp_update_counter(acc::Tuple{Int,Int}, up::Tuple{Int,Int}) = acc[1] + up[1], acc[2] + up[2]
-
-# Bitparallel counting
-# --------------------
+# Masking functions
+# -----------------
 
 @inline function nibble_mask(::Type{Certain}, x::UInt64)
     return nibble_mask(enumerate_nibbles(x), 0x1111111111111111)
@@ -58,8 +51,16 @@ end
     return nibble_mask(Certain, a) & nibble_mask(Certain, b)
 end
 
+
+# BioSequences.count_sites_bitpar extension
+# -----------------------------------------
+
 for A in (DNAAlphabet, RNAAlphabet)
     @eval begin
+
+        # Counter types
+        @inline BioSequences.bp_counter_type{M<:Mutation}(::Type{M}, ::Type{$A{4}}) = Tuple{Int, Int}
+        @inline BioSequences.bp_start_counter{M<:Mutation}(::Type{M}, ::Type{$A{4}}) = Int(0), Int(0)
 
         # Conserved
         @inline bp_chunk_count(::Type{Conserved}, ::Type{$A{2}}, a::UInt64, b::UInt64) = bp_chunk_count(Match, $A{2}, a, b)
@@ -99,3 +100,5 @@ for A in (DNAAlphabet, RNAAlphabet)
 
     end
 end
+
+@inline BioSequences.bp_update_counter(acc::Tuple{Int,Int}, up::Tuple{Int,Int}) = acc[1] + up[1], acc[2] + up[2]
