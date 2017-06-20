@@ -55,6 +55,8 @@ end
 # BioSequences.count_sites_bitpar extension
 # -----------------------------------------
 
+Base.zero(::Type{Tuple{Int,Int}}) = Int(0), Int(0)
+
 for A in (DNAAlphabet, RNAAlphabet)
     @eval begin
 

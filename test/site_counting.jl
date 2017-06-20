@@ -123,6 +123,27 @@
                 testforencs(2, 4, true)
             end
         end
+    end
 
+    @testset "Pairwise methods" begin
+        @testset "4-bit encoded sequences" begin
+            dnas = [dna"ATCGCCA-", dna"ATCGCCTA", dna"ATCGCCT-", dna"GTCGCCTA"]
+            rnas = [rna"AUCGCCA-", rna"AUCGCCUA", rna"AUCGCCU-", rna"GUCGCCUA"]
+
+            answer_mutated = [(0,0) (1,7) (1,7) (2,7);
+                              (1,7) (0,0) (0,7) (1,8);
+                              (1,7) (0,7) (0,0) (1,7);
+                              (2,7) (1,8) (1,7) (0,0)]
+
+            answer_conserved = [(0,0) (6,7) (6,7) (5,7);
+                                (6,7) (0,0) (7,7) (7,8);
+                                (6,7) (7,7) (0,0) (6,7);
+                                (5,7) (7,8) (6,7) (0,0)]
+            for i in (dnas, rnas)
+                @test count_pairwise(Mutated, i...) == answer_mutated
+                @test count_pairwise(Conserved, i...) == answer_conserved
+            end
+
+        end
     end
 end
