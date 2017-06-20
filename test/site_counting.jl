@@ -71,7 +71,7 @@
         end
         function testforencs(a::Int, b::Int, subset::Bool)
             for alphabet in (DNAAlphabet, RNAAlphabet)
-                for _ in  1:1
+                for _ in  1:50
                     seqA = random_seq(alphabet{a}, rand(10:100))
                     seqB = random_seq(alphabet{b}, rand(10:100))
                     sa = seqA
@@ -164,6 +164,80 @@
             for i in (dnas, rnas)
                 @test count_pairwise(Mutated, i...) == answer_mutated
                 @test count_pairwise(Conserved, i...) == answer_conserved
+            end
+        end
+    end
+
+    @testset "Windowed methods" begin
+        @testset "4-bit encoded sequences" begin
+            dnaA = dna"ATCGCCA-M"
+            dnaB = dna"ATCGCCTAA"
+            rnaA = rna"AUCGCCA-M"
+            rnaB = rna"AUCGCCUAA"
+
+            for seqs in ((dnaA, dnaB), (rnaA, rnaB))
+                @test count(Conserved, seqs[1], seqs[2], 3, 1) == [IntervalValue(1, 3, (3,3)),
+                                                                   IntervalValue(2, 4, (3,3)),
+                                                                   IntervalValue(3, 5, (3,3)),
+                                                                   IntervalValue(4, 6, (3,3)),
+                                                                   IntervalValue(5, 7, (2,3)),
+                                                                   IntervalValue(6, 8, (1,2)),
+                                                                   IntervalValue(7, 9, (0,1))]
+                @test count(Mutated, seqs[1], seqs[2], 3, 1) == [IntervalValue(1, 3, (0,3)),
+                                                                 IntervalValue(2, 4, (0,3)),
+                                                                 IntervalValue(3, 5, (0,3)),
+                                                                 IntervalValue(4, 6, (0,3)),
+                                                                 IntervalValue(5, 7, (1,3)),
+                                                                 IntervalValue(6, 8, (1,2)),
+                                                                 IntervalValue(7, 9, (1,1))]
+            end
+        end
+
+        @testset "2-bit encoded sequences" begin
+            dnaA = BioSequence{DNAAlphabet{2}}("ATCGCCATT")
+            dnaB = BioSequence{DNAAlphabet{2}}("ATCGCCTAA")
+            rnaA = BioSequence{RNAAlphabet{2}}("AUCGCCAUU")
+            rnaB = BioSequence{RNAAlphabet{2}}("AUCGCCUAA")
+
+            for seqs in ((dnaA, dnaB), (rnaA, rnaB))
+                @test count(Conserved, seqs[1], seqs[2], 3, 1) == [IntervalValue(1, 3, 3),
+                                                                   IntervalValue(2, 4, 3),
+                                                                   IntervalValue(3, 5, 3),
+                                                                   IntervalValue(4, 6, 3),
+                                                                   IntervalValue(5, 7, 2),
+                                                                   IntervalValue(6, 8, 1),
+                                                                   IntervalValue(7, 9, 0)]
+                @test count(Mutated, seqs[1], seqs[2], 3, 1) == [IntervalValue(1, 3, 0),
+                                                                 IntervalValue(2, 4, 0),
+                                                                 IntervalValue(3, 5, 0),
+                                                                 IntervalValue(4, 6, 0),
+                                                                 IntervalValue(5, 7, 1),
+                                                                 IntervalValue(6, 8, 2),
+                                                                 IntervalValue(7, 9, 3)]
+            end
+        end
+
+        @testset "Mixed encodings" begin
+            dnaA = dna"ATCGCCA-M"
+            dnaB = BioSequence{DNAAlphabet{2}}("ATCGCCTAA")
+            rnaA = rna"AUCGCCA-M"
+            rnaB = BioSequence{RNAAlphabet{2}}("AUCGCCUAA")
+
+            for seqs in ((dnaA, dnaB), (rnaA, rnaB))
+                @test count(Conserved, seqs[1], seqs[2], 3, 1) == [IntervalValue(1, 3, (3,3)),
+                                                                   IntervalValue(2, 4, (3,3)),
+                                                                   IntervalValue(3, 5, (3,3)),
+                                                                   IntervalValue(4, 6, (3,3)),
+                                                                   IntervalValue(5, 7, (2,3)),
+                                                                   IntervalValue(6, 8, (1,2)),
+                                                                   IntervalValue(7, 9, (0,1))]
+                @test count(Mutated, seqs[1], seqs[2], 3, 1) == [IntervalValue(1, 3, (0,3)),
+                                                                 IntervalValue(2, 4, (0,3)),
+                                                                 IntervalValue(3, 5, (0,3)),
+                                                                 IntervalValue(4, 6, (0,3)),
+                                                                 IntervalValue(5, 7, (1,3)),
+                                                                 IntervalValue(6, 8, (1,2)),
+                                                                 IntervalValue(7, 9, (1,1))]
             end
         end
     end

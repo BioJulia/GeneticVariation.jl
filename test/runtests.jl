@@ -4,6 +4,7 @@ using Base.Test
 
 using BioSequences, GeneticVariation
 import BufferedStreams: BufferedInputStream
+import IntervalTrees: IntervalValue
 import YAML
 
 function get_bio_fmt_specimens()
