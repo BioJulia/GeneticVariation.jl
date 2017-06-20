@@ -143,7 +143,28 @@
                 @test count_pairwise(Mutated, i...) == answer_mutated
                 @test count_pairwise(Conserved, i...) == answer_conserved
             end
-
+        end
+        @testset "2-bit encoded sequences" begin
+            dnas = [BioSequence{DNAAlphabet{2}}("ATCGCCAC"),
+                    BioSequence{DNAAlphabet{2}}("ATCGCCTA"),
+                    BioSequence{DNAAlphabet{2}}("ATCGCCTT"),
+                    BioSequence{DNAAlphabet{2}}("GTCGCCTA")]
+            rnas = [BioSequence{RNAAlphabet{2}}("AUCGCCAC"),
+                    BioSequence{RNAAlphabet{2}}("AUCGCCUA"),
+                    BioSequence{RNAAlphabet{2}}("AUCGCCUU"),
+                    BioSequence{RNAAlphabet{2}}("GUCGCCUA")]
+            answer_mutated = [0 2 2 3;
+                              2 0 1 1;
+                              2 1 0 2;
+                              3 1 2 0]
+            answer_conserved = [0 6 6 5;
+                                6 0 7 7;
+                                6 7 0 6;
+                                5 7 6 0]
+            for i in (dnas, rnas)
+                @test count_pairwise(Mutated, i...) == answer_mutated
+                @test count_pairwise(Conserved, i...) == answer_conserved
+            end
         end
     end
 end
