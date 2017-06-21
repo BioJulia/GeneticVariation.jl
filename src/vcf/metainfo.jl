@@ -190,7 +190,7 @@ function Base.show(io::IO, metainfo::MetaInfo)
     print(io, summary(metainfo), ':')
     if isfilled(metainfo)
         println(io)
-        println(io, "    tag: ", metainfotag(metainfo))
+        println(io, "    tag: ", BioCore.metainfotag(metainfo))
         print(io, "  value:")
         if metainfo.dict
             for (key, val) in zip(keys(metainfo), values(metainfo))
