@@ -4,5 +4,6 @@ BGZFStreams
 BioCore
 BioSequences
 BufferedStreams
+Compat 0.18
 Twiddle
 IntervalTrees

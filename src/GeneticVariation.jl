@@ -12,8 +12,8 @@ module GeneticVariation
 
 export
     # Site types
-    #Conserved,
-    #Mutated,
+    Conserved,
+    Mutated,
     #Transition,
     #Transversion,
 
@@ -33,6 +33,7 @@ export
 importall BioCore
 import BioSymbols: ispurine, ispyrimidine
 import BioSequences:
+    BioSequences,
     Alphabet,
     DNAAlphabet,
     RNAAlphabet,
@@ -41,7 +42,9 @@ import BioSequences:
     Certain,
     Mismatch,
     Match,
-    Site
+    Position,
+    bp_chunk_count
+import Compat: @compat
 import IntervalTrees: Interval, IntervalValue
 import Twiddle:
     enumerate_nibbles,
@@ -56,6 +59,7 @@ import Twiddle:
 #include("distances/dist.jl")
 include("vcf/vcf.jl")
 include("bcf/bcf.jl")
+include("site_counting.jl")
 #include("mash.jl")
 
 end # Module GeneticVariation
