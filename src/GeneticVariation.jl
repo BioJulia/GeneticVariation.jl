@@ -17,6 +17,13 @@ export
     #Transition,
     #Transversion,
 
+    # Distances
+    distance,
+    Jaccard,
+    MASH,
+    mash,
+    jaccard,
+
     # VCF and BCF
     VCF,
     BCF,
@@ -24,7 +31,6 @@ export
     metainfotag,
     metainfoval,
     isfilled,
-
     MissingFieldException
     #mashdistance,
     #distance,
@@ -55,11 +61,10 @@ import Twiddle:
     count_zero_bitpairs,
     count_nonzero_bitpairs
 
-#include("site_counting/site_types/site_types.jl")
 #include("distances/dist.jl")
 include("vcf/vcf.jl")
 include("bcf/bcf.jl")
 include("site_counting.jl")
-#include("mash.jl")
+include("distances/minhash.jl")
 
 end # Module GeneticVariation
