@@ -38,6 +38,7 @@ end
 include("vcf.jl")
 include("bcf.jl")
 include("site_counting.jl")
+include("minhash.jl")
 
 
 end # Module TestGeneticVariation

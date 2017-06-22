@@ -49,5 +49,5 @@ end
     return -1/k * log(2j / (1+j))
 end
 
-@inline mashdist(sketch1::MinHashSketch, sketch2::MinHashSketch) = distance(MASH, sketch1, sketch2)
-@inline jaccarddist(sketch1::MinHashSketch, sketch2::MinHashSketch) = distance(Jaccard, sketch1, sketch2)
+@inline mash(sketch1::MinHashSketch, sketch2::MinHashSketch) = distance(MASH, sketch1, sketch2)
+@inline jaccard(sketch1::MinHashSketch, sketch2::MinHashSketch) = distance(Jaccard, sketch1, sketch2)
