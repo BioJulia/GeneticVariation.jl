@@ -21,8 +21,8 @@ export
     distance,
     Jaccard,
     MASH,
-    mashdist,
-    jaccarddist,
+    mash,
+    jaccard,
 
     # VCF and BCF
     VCF,
