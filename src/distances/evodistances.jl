@@ -10,6 +10,6 @@
 # -----
 
 @compat abstract type EvolutionaryDistance end
-@compat abstract type UncorrectedDistance <: EvolutionaryDistance end
-@compat abstract type CorrectedDistance <: EvolutionaryDistance end
-@compat abstract type TsTv <: CorrectedDistance end
+@compat abstract type TsTv <: EvolutionaryDistance end
+
+include("proportion.jl")
