@@ -250,8 +250,7 @@
     @test_throws EOFError read!(reader, record)
 
     # round-trip test
-    get_bio_fmt_specimens()
-    vcfdir = joinpath(dirname(@__FILE__), "BioFmtSpecimens", "VCF")
+    vcfdir = joinpath(fmtdir, "VCF")
     for specimen in YAML.load_file(joinpath(vcfdir, "index.yml"))
         filepath = joinpath(vcfdir, specimen["filename"])
         records = VCF.Record[]

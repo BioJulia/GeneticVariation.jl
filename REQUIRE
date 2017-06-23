@@ -1,7 +1,7 @@
 julia 0.5
 Automa
 BGZFStreams
-BioCore
+BioCore 1.1.0
 BioSequences 0.6.2
 BufferedStreams
 Compat 0.17
