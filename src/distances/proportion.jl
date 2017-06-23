@@ -14,7 +14,7 @@ In other words this so called p-distance is simply the proportion of sites
 between each pair of sequences, that are mutated (again where T determines
 what kind of mutation).
 """
-immutable Proportion{T} <: UncorrectedDistance end
+immutable Proportion{T} end
 
 @inline function distance{T}(::Type{Proportion{T}}, x::Sequence, y::Sequence)
     cs = count(T, x, y)

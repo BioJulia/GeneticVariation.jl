@@ -41,6 +41,7 @@ import BioSequences:
     Alphabet,
     DNAAlphabet,
     RNAAlphabet,
+    Sequence,
     BioSequence,
     MinHashSketch,
     Certain,
