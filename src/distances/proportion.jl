@@ -18,17 +18,17 @@ immutable Proportion{T} <: UncorrectedDistance end
 
 @inline function distance{T}(::Type{Proportion{T}}, x::Sequence, y::Sequence)
     cs = count(T, x, y)
-    return _expected(Proportion{T}, cs, x, y)
+    return _pcorrection(Proportion{T}, cs, x, y)
 end
 
-@inline function _expected{T}(::Type{Proportion{T}}, k::Int, x::Sequence, y::Sequence)
+@inline function pdistance{T}(::Type{T}, x, y)
+    return distance(Proportion{T}, x, y)
+end
+
+@inline function _pcorrection(k::Int, x::Sequence, y::Sequence)
     return k / min(length(x), length(y))
 end
 
-@inline function _expected{T}(::Type{Proportion{T}}, cs::Tuple{Int,Int}, x::Sequence, y::Sequence)
-    return cs[1] / cs[2]
-end
-
-@inline function _expected{T}(::Type{Proportion{T}}, cs::Matrix{Int}, x::Sequence, y::Sequence)
+@inline function _pcorrection(cs::Tuple{Int,Int}, x::Sequence, y::Sequence)
     return cs[1] / cs[2]
 end
