@@ -37,7 +37,6 @@ export
     #Proportion
 
 importall BioCore
-import BioSymbols: ispurine, ispyrimidine
 import BioSequences:
     BioSequences,
     Alphabet,
