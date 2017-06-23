@@ -55,8 +55,6 @@ end
 # BioSequences.count_sites_bitpar extension
 # -----------------------------------------
 
-Base.zero(::Type{Tuple{Int,Int}}) = Int(0), Int(0)
-
 for A in (DNAAlphabet, RNAAlphabet)
     @eval begin
 
@@ -103,3 +101,4 @@ for A in (DNAAlphabet, RNAAlphabet)
 end
 
 @inline BioSequences.bp_update_counter(acc::Tuple{Int,Int}, up::Tuple{Int,Int}) = acc[1] + up[1], acc[2] + up[2]
+@inline BioSequences.diag_val(::Type{Tuple{Int,Int}}) = Int(0), Int(0)
