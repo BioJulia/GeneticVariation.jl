@@ -39,10 +39,12 @@ end
 """
     expected{C<:CDN}(::Type{NG86}, codon::C, k::Float64 = 1.0, code::GeneticCode)
 
-Enumerate the number of synonymous and non-synonymous sites present at a codon,
-where each site may be both partially synonymous and non-synonymous.
+Enumerate the number of expected synonymous and non-synonymous sites present at
+a codon.
+
+Each site may be both partially synonymous and non-synonymous.
 """
-function expected_sites{C<:CDN}(codon::C, k::Float64, code::GeneticCode)
+function expected{C<:CDN}(codon::C, k::Float64, code::GeneticCode)
     tsn, tvn = classify_neighbors(codon)
     aa = code[codon]
     S = N = 0.0
@@ -68,7 +70,7 @@ function expected_sites{C<:CDN}(codon::C, k::Float64, code::GeneticCode)
     return (S / normalization), (N / normalization)
 end
 
-function expected{C<:CDN}(::Type{NG86}, codons::Vector{CDN}, k::Float64 = 1.0, code::GeneticCode)
+function expected{C<:CDN}(::Type{NG86}, codons::Vector{CDN}, k::Float64 = 1.0, code::GeneticCode = DEFAULT_TRANS)
     S = N = 0.0
     for codon in codons
         S_i, N_i = expected(NG86, codon, k, code)
