@@ -48,7 +48,8 @@ import BioSequences:
     Mismatch,
     Match,
     Position,
-    bp_chunk_count
+    bp_chunk_count,
+    GeneticCode
 import Compat: @compat
 import IntervalTrees: Interval, IntervalValue
 import Twiddle:
@@ -65,5 +66,6 @@ include("vcf/vcf.jl")
 include("bcf/bcf.jl")
 include("site_counting.jl")
 include("distances/minhash.jl")
+include("ng86.jl")
 
 end # Module GeneticVariation

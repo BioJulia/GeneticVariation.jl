@@ -7,6 +7,8 @@
 # License is MIT: https://github.com/BioJulia/GeneticVariation.jl/blob/master/LICENSE.md
 
 const CDN = Union{DNACodon, RNACodon}
+const DEFAULT_TRANS = ncbi_trans_table[1]
+immutable NG86 end
 
 """
     classify_neighbor(codon::DNACodon)
@@ -35,13 +37,13 @@ function classify_neighbors(codon::DNACodon)
 end
 
 """
-    expected_ng86{C<:CDN}(codon::C, k::Float64 = 1.0, code::GeneticCode)
+    expected{C<:CDN}(::Type{NG86}, codon::C, k::Float64 = 1.0, code::GeneticCode)
 
 Enumerate the number of synonymous and non-synonymous sites present at a codon,
 where each site may be both partially synonymous and non-synonymous.
 """
-function expected_ng86{C<:CDN}(codon::C, k::Float64 = 1.0, code::BioSequences.GeneticCode)
-    tsn, tvn = classify_neighbours(codon)
+function expected_sites{C<:CDN}(codon::C, k::Float64, code::GeneticCode)
+    tsn, tvn = classify_neighbors(codon)
     aa = code[codon]
     S = N = 0.0
     for neighbor in tsn
@@ -53,7 +55,7 @@ function expected_ng86{C<:CDN}(codon::C, k::Float64 = 1.0, code::BioSequences.Ge
             N += 1.0
         end
     end
-    for neighbor in tsv
+    for neighbor in tvn
         if code[neighbor] == AA_Term
             N += k
         elseif code[neighbor] == aa
@@ -66,17 +68,17 @@ function expected_ng86{C<:CDN}(codon::C, k::Float64 = 1.0, code::BioSequences.Ge
     return (S / normalization), (N / normalization)
 end
 
-function expected_ng86{C<:CDN}(codons::Vector{CDN}, k::Float64 = 1.0, code::BioSequences.GeneticCode)
+function expected{C<:CDN}(::Type{NG86}, codons::Vector{CDN}, k::Float64 = 1.0, code::GeneticCode)
     S = N = 0.0
     for codon in codons
-        S_i, N_i = expected_ng86(NG86, codon, k, code)
+        S_i, N_i = expected(NG86, codon, k, code)
         S += S_i
         N += N_i
     end
     return S, N
 end
 
-@inline function compare_codon{C<:CDN}(x::C, y::C, code::BioSequences.GeneticCode, weight::Float64 = 1.0)
+@inline function classify_mutation{C<:CDN}(x::C, y::C, code::GeneticCode, weight::Float64 = 1.0)
     if code[x] == code[y]
         # Synonymous mutation.
         return weight, 0.0
@@ -87,33 +89,29 @@ end
 end
 
 """
-    diff_positions{C<:CDN}(x::C, y::C)
+    find_differences{C<:CDN}(x::C, y::C)
 
 Identify which sites in two codons are different.
 """
-function diff_positions{C<:CDN}(x::C, y::C)
-    diff_pos = Vector{Int}()
-    for (i, k) in enumerate(zip(x, y))
-        if k[1] != k[2]
-            push!(diff_pos, i)
-        end
-    end
-    return diff_pos, length(diff_pos)
+@inline function find_differences{C<:CDN}(x::C, y::C)
+    positions = Int[1,2,3]
+    filter!(i -> x[i] != y[i], positions)
+    return positions, length(positions)
 end
 
-function ng86_diff{C<:CDN}(x::C, y::C, code::GeneticCode)
+function distance{C<:CDN}(::Type{NG86}, x::C, y::C, code::GeneticCode = DEFAULT_TRANS)
     if x == y # Early escape, codons are the same, no syn or nonsyn mutations.
         return 0.0, 0.0
     else
         S = N = 0.0
 
-        diff_pos, n_diffs = diff_positions(x, y) # Which positions are different.
+        diff_positions, n_diffs = find_differences(x, y) # Which positions are different.
 
         if n_diffs == 1
 
             # One site in the two codons is different. It is obvious and simple
             # then to count whether it is a synonymous or nonsynonymous mutation.
-            S, N = compare_codon(x, y, code)
+            S, N = classify_mutation(x, y, code)
             return S, N
 
         elseif n_diffs == 2
@@ -127,16 +125,16 @@ function ng86_diff{C<:CDN}(x::C, y::C, code::GeneticCode)
             # 1: CTA (L) -> GTA (V) -> GTT (V) : 1 nonsynonymous change and 1 synonymous change.
             # 2: CTA (L) -> CTT (L) -> GTT (V) : 1 nonsynonymous change and 1 synonymous change.
 
-            @inbounds for pos in diff_pos
+            @inbounds for pos in diff_positions
                 bases = collect(x)
                 bases[pos] = y[pos]
                 temp_cdn = C(bases...)
                 # Step 1 of pathway.
-                S_i, N_i = compare_codon(x, temp_cdn, code, 0.5)
+                S_i, N_i = classify_mutation(x, temp_cdn, code, 0.5)
                 S += S_i
                 N += N_i
                 # Step 2 of pathway.
-                S_i, N_i = compare_codon(temp_cdn, y, code, 0.5)
+                S_i, N_i = classify_mutation(temp_cdn, y, code, 0.5)
                 S += S_i
                 N += N_i
             end
@@ -161,13 +159,13 @@ function ng86_diff{C<:CDN}(x::C, y::C, code::GeneticCode)
                 bases = collect(tmp_cdn_a)
                 bases[path[2]] = y[path[2]]
                 tmp_cdn_b = C(bases...)
-                S_i, N_i = compare_codon(x, tmp_cdn_a, code, 0.5 / 3)
+                S_i, N_i = classify_mutation(x, tmp_cdn_a, code, 0.5 / 3)
                 S += S_i
                 N += N_i
-                S_i, N_i = compare_codon(tmp_cdn_a, tmp_cdn_b, code, 0.5 / 3)
+                S_i, N_i = classify_mutation(tmp_cdn_a, tmp_cdn_b, code, 0.5 / 3)
                 S += S_i
                 N += N_i
-                S_i, N_i = compare_codon(tmp_cdn_b, y, code, 0.5 / 3)
+                S_i, N_i = classify_mutation(tmp_cdn_b, y, code, 0.5 / 3)
                 S += S_i
                 N += N_i
             end
@@ -177,15 +175,27 @@ function ng86_diff{C<:CDN}(x::C, y::C, code::GeneticCode)
     end
 end
 
+@inline function d_(p::Float64)
+    - 3 / 4 * log(1 - 4.0 / 3 * p)
+end
 
-function dNdS{C<:CDN}(x::Vector{C}, y::Vector{C}, k::Float64 = 1, code::GeneticCode)
-    S_sites_x, N_sites_x = ng86_sites(x, k, code)
-    S_sites_y, N_sites_y = ng86_sites(y, k, code)
-    S_sites = (S_sites_x + S_sites_y) / 2
-    N_sites = (N_sites_x + N_sites_y) / 2
-    S = N = 0.0
+function dNdS{C<:CDN}(::Type{NG86}, x::Vector{C}, y::Vector{C}, k::Float64 = 1.0, code::GeneticCode = DEFAULT_TRANS)
+    # Compute S and N: The expected number of synonymous and nonsynonymous sites.
+    S_x, N_x = expected(NG86, x, k, code)
+    S_y, N_y = expected(NG86, y, k, code)
+    S = (S_x + S_y) / 2.0
+    N = (N_x + N_y) / 2.0
+    # Compute S_d and N_d: The observed number of synonymous and nonsynonymous mutations.
+    S_d = N_d = 0.0
     for (i, j) in zip(x, y)
-        S_i, N_i = ng86_diff(i, j, code)
-
+        S_i, N_i = distance(NG86, i, j, code)
+        S_d += S_i
+        N_d += N_i
     end
+    # P_s and P_n: The proportion of and synonymous and nonsynonymous differences
+    P_s = S_d / S
+    P_n = N_d / N
+    dN = d_(P_n)
+    dS = d_(P_s)
+    return dN, dS
 end
