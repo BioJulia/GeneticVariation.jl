@@ -10,6 +10,9 @@ const CDN = Union{BioSequences.DNACodon, BioSequences.RNACodon}
 const DEFAULT_TRANS = BioSequences.ncbi_trans_table[1]
 immutable NG86 end
 
+@inline bases(::Type{DNACodon}) = ACGT
+@inline bases(::Type{RNACodon}) = ACGU
+
 """
     classify_neighbor(codon::DNACodon)
 
@@ -22,7 +25,7 @@ function classify_neighbors{C<:CDN}(codon::C)
     codon_bases = collect(codon)
     @inbounds for n in 1:3
         i = codon_bases[n]
-        for j in alphabet(C)
+        for j in bases(C)
             if i != j
                 thiscdn = copy(codon_bases)
                 thiscdn[n] = j
