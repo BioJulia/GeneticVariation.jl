@@ -44,7 +44,7 @@ a codon.
 
 Each site may be both partially synonymous and non-synonymous.
 """
-function expected{C<:CDN}(codon::C, k::Float64, code::GeneticCode)
+function expected{C<:CDN}(::Type{NG86}, codon::C, k::Float64, code::GeneticCode)
     tsn, tvn = classify_neighbors(codon)
     aa = code[codon]
     S = N = 0.0
