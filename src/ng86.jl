@@ -16,13 +16,13 @@ immutable NG86 end
 Computes and classifies the neighbors of a given `codon` as either a
 transition neighbor, or a transversion neighbor.
 """
-function classify_neighbors(codon::DNACodon)
-    tsn = Vector{DNACodon}()
-    tvn = Vector{DNACodon}()
+function classify_neighbors{C<:CDN}(codon::C)
+    tsn = Vector{C}()
+    tvn = Vector{C}()
     codon_bases = collect(codon)
     @inbounds for n in 1:3
         i = codon_bases[n]
-        for j in ACGT
+        for j in alphabet(C)
             if i != j
                 thiscdn = copy(codon_bases)
                 thiscdn[n] = j
