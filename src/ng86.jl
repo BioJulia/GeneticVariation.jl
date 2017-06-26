@@ -29,7 +29,7 @@ function classify_neighbors{C<:CDN}(codon::C)
                 ipur = ispurine(i)
                 jpur = ispurine(j)
                 topush = ifelse((ipur && jpur) || (!ipur && !jpur), tsn, tvn)
-                push!(topush, DNACodon(thiscdn...))
+                push!(topush, C(thiscdn...))
             end
         end
     end
