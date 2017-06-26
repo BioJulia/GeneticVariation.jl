@@ -7,7 +7,7 @@
 # License is MIT: https://github.com/BioJulia/GeneticVariation.jl/blob/master/LICENSE.md
 
 const CDN = Union{BioSequences.DNACodon, BioSequences.RNACodon}
-const DEFAULT_TRANS = ncbi_trans_table[1]
+const DEFAULT_TRANS = BioSequences.ncbi_trans_table[1]
 immutable NG86 end
 
 """
