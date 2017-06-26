@@ -11,8 +11,8 @@
         s_ans = [0.0, 0.333, 1.0, 1.0, 0.333, 0.666]
         for i in 1:endof(codons)
             cdn = codons[i]
-            @test_approx_eq_eps GeneticVariation.expected(NG86, cdn)[1] s_ans[i] 1e-3
-            @test_approx_eq_eps GeneticVariation.expected(NG86, cdn)[2] n_ans[i] 1e-3
+            @test_approx_eq_eps GeneticVariation.expected(NG86, cdn, 1.0, ncbi_trans_table[1])[1] s_ans[i] 1e-3
+            @test_approx_eq_eps GeneticVariation.expected(NG86, cdn, 1.0, ncbi_trans_table[1])[2] n_ans[i] 1e-3
         end
     end
 
