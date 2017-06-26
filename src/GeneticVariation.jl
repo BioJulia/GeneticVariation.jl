@@ -25,6 +25,7 @@ export
     pdistance,
     mash,
     jaccard,
+    NG86,
 
     # VCF and BCF
     VCF,
