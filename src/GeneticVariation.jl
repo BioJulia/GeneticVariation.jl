@@ -18,9 +18,11 @@ export
     #Transversion,
 
     # Distances
-    distance,
+    Proportion,
     Jaccard,
     MASH,
+    distance,
+    pdistance,
     mash,
     jaccard,
 
@@ -32,9 +34,6 @@ export
     metainfoval,
     isfilled,
     MissingFieldException
-    #mashdistance,
-    #distance,
-    #Proportion
 
 importall BioCore
 import BioSequences:
@@ -42,6 +41,7 @@ import BioSequences:
     Alphabet,
     DNAAlphabet,
     RNAAlphabet,
+    Sequence,
     BioSequence,
     MinHashSketch,
     Certain,
@@ -61,11 +61,11 @@ import Twiddle:
     count_zero_bitpairs,
     count_nonzero_bitpairs
 
-#include("distances/dist.jl")
 include("vcf/vcf.jl")
 include("bcf/bcf.jl")
 include("site_counting.jl")
 include("distances/minhash.jl")
+include("distances/proportion.jl")
 include("ng86.jl")
 
 end # Module GeneticVariation
