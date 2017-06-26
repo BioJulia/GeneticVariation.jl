@@ -1,7 +1,7 @@
 # ng86.jl
 # =======
 #
-# NG86 based distance measures for codons.
+# NG86 based distance measures for codons, with dNdS computation.
 #
 # This file is a part of BioJulia.
 # License is MIT: https://github.com/BioJulia/GeneticVariation.jl/blob/master/LICENSE.md
