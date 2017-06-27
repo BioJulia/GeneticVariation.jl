@@ -54,6 +54,7 @@ import BioSequences:
     ispurine,
     AA_Term
 import Compat: @compat
+import Combinatorics.permutations
 import IntervalTrees: Interval, IntervalValue
 import Twiddle:
     enumerate_nibbles,

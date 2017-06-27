@@ -157,7 +157,7 @@ function observed{C<:CDN}(::Type{NG86}, x::C, y::C, code::GeneticCode = DEFAULT_
             # 5: CTA (L) -> CTT (L) -> GTT (V) -> GAT (D) : 2 nonsynonymous changes and 1 synonymous change.
             # 6: CTA (L) -> CTT (L) -> CAT (H) -> GAT (D) : 2 nonsynonymous changes and 1 synonymous change.
 
-            @inbounds for path in Combinatorics.permutations([1,2,3])
+            @inbounds for path in permutations([1,2,3])
                 bases = collect(x)
                 bases[path[1]] = y[path[1]]
                 tmp_cdn_a = C(bases...)
