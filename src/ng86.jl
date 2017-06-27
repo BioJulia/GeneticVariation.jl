@@ -10,8 +10,8 @@ const CDN = Union{BioSequences.DNACodon, BioSequences.RNACodon}
 const DEFAULT_TRANS = BioSequences.ncbi_trans_table[1]
 immutable NG86 end
 
-@inline bases(::Type{BioSequences.DNACodon}) = ACGT
-@inline bases(::Type{BioSequences.RNACodon}) = ACGU
+@inline bases(::Type{BioSequences.DNACodon}) = BioSequences.ACGT
+@inline bases(::Type{BioSequences.RNACodon}) = BioSequences.ACGU
 
 """
     classify_neighbor(codon::DNACodon)
