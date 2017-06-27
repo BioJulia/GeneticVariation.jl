@@ -25,6 +25,7 @@ export
     pdistance,
     mash,
     jaccard,
+    NG86,
 
     # VCF and BCF
     VCF,
@@ -48,8 +49,12 @@ import BioSequences:
     Mismatch,
     Match,
     Position,
-    bp_chunk_count
+    bp_chunk_count,
+    GeneticCode,
+    ispurine,
+    AA_Term
 import Compat: @compat
+import Combinatorics.permutations
 import IntervalTrees: Interval, IntervalValue
 import Twiddle:
     enumerate_nibbles,
@@ -65,5 +70,6 @@ include("bcf/bcf.jl")
 include("site_counting.jl")
 include("distances/minhash.jl")
 include("distances/proportion.jl")
+include("ng86.jl")
 
 end # Module GeneticVariation
