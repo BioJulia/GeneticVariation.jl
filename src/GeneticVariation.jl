@@ -51,7 +51,8 @@ import BioSequences:
     Position,
     bp_chunk_count,
     GeneticCode,
-    ispurine
+    ispurine,
+    AA_Term
 import Compat: @compat
 import IntervalTrees: Interval, IntervalValue
 import Twiddle:
