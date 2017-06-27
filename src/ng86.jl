@@ -104,7 +104,7 @@ Identify which sites in two codons are different.
     return positions, length(positions)
 end
 
-function distance{C<:CDN}(::Type{NG86}, x::C, y::C, code::GeneticCode = DEFAULT_TRANS)
+function observed{C<:CDN}(::Type{NG86}, x::C, y::C, code::GeneticCode = DEFAULT_TRANS)
     if x == y # Early escape, codons are the same, no syn or nonsyn mutations.
         return 0.0, 0.0
     else
@@ -193,7 +193,7 @@ function dNdS{C<:CDN}(::Type{NG86}, x::Vector{C}, y::Vector{C}, k::Float64 = 1.0
     # Compute S_d and N_d: The observed number of synonymous and nonsynonymous mutations.
     S_d = N_d = 0.0
     for (i, j) in zip(x, y)
-        S_i, N_i = distance(NG86, i, j, code)
+        S_i, N_i = observed(NG86, i, j, code)
         S_d += S_i
         N_d += N_i
     end

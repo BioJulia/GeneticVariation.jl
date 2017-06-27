@@ -16,4 +16,14 @@
         end
     end
 
+    @testset "observed" begin
+        function testobserved(a, b, ans)
+            @test_approx_eq_eps GeneticVariation.observed(NG86, a, b, ncbi_trans_table[1])[1] ans[1] 1e-3
+            @test_approx_eq_eps GeneticVariation.observed(NG86, a, b, ncbi_trans_table[1])[2] ans[2] 1e-3
+        end
+        testobserved(kmer"CCC", kmer"CGC", (0.0, 1.0))
+        testobserved(kmer"GGG", kmer"GGC", (1.0, 0.0))
+        testobserved(kmer"TTT", kmer"TAC", (0.5, 1.5))
+        testobserved(kmer"TTT", kmer"GAC", (0.333, 2.666))
+    end
 end
