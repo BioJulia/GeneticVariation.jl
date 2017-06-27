@@ -73,7 +73,7 @@ function expected{C<:CDN}(::Type{NG86}, codon::C, k::Float64, code::GeneticCode)
     return (S / normalization), (N / normalization)
 end
 
-function expected{C<:CDN}(::Type{NG86}, codons::Vector{CDN}, k::Float64 = 1.0, code::GeneticCode = DEFAULT_TRANS)
+function expected{C<:CDN}(::Type{NG86}, codons::Vector{C}, k::Float64 = 1.0, code::GeneticCode = DEFAULT_TRANS)
     S = N = 0.0
     for codon in codons
         S_i, N_i = expected(NG86, codon, k, code)
