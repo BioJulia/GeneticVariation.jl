@@ -22,7 +22,7 @@
         end
         testobserved(kmer"CCC", kmer"CGC", (0.0, 1.0))
         testobserved(kmer"GGG", kmer"GGC", (1.0, 0.0))
-        testobserved(kmer"TTT", kmer"TAC", (0.5, 1.5))
+        testobserved(kmer"TTT", kmer"TAC", (1.0, 1.0))
         testobserved(kmer"TTT", kmer"GAC", (0.333, 2.666))
     end
 end
