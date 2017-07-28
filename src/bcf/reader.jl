@@ -6,7 +6,7 @@
 # This file is a part of BioJulia.
 # License is MIT: https://github.com/BioJulia/GeneticVariation.jl/blob/master/LICENSE
 
-immutable Reader{T<:IO} <: BioCore.IO.AbstractReader
+struct Reader{T<:IO} <: BioCore.IO.AbstractReader
     version::Tuple{UInt8,UInt8}  # (major, minor)
     header::VCF.Header
     stream::BGZFStreams.BGZFStream{T}

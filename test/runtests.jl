@@ -11,7 +11,7 @@ import BufferedStreams: BufferedInputStream
 import IntervalTrees: IntervalValue
 import YAML
 
-function random_seq{A<:Alphabet}(::Type{A}, n::Integer)
+function random_seq(::Type{A}, n::Integer) where A <: Alphabet
     nts = alphabet(A)
     probs = Vector{Float64}(length(nts))
     fill!(probs, 1 / length(nts))

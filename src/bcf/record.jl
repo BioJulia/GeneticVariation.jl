@@ -6,7 +6,7 @@
 # This file is a part of BioJulia.
 # License is MIT: https://github.com/BioJulia/GeneticVariation.jl/blob/master/LICENSE
 
-type Record
+mutable struct Record
     # data and filled range
     data::Vector{UInt8}
     filled::UnitRange{Int}
@@ -433,7 +433,7 @@ function genotype(record::Record, index::Integer, key::Integer)
     throw(KeyError(key))
 end
 
-function genotype{T<:Integer}(record::Record, indexes::AbstractVector{T}, key::Integer)
+function genotype(record::Record, indexes::AbstractVector{<:Integer}, key::Integer)
     checkfilled(record)
     N = n_sample(record)
     offset::Int = record.sharedlen
@@ -527,7 +527,7 @@ function bcftypesize(typ::Symbol)
            error("size unknown")
 end
 
-function load{T}(::Type{T}, data::Vector{UInt8}, offset::Int)
+function load(::Type{T}, data::Vector{UInt8}, offset::Int) where T
     if offset + sizeof(T) > length(data)
         throw(BoundsError())
     end
@@ -591,7 +591,7 @@ function skipvecbody(data::Vector{UInt8}, offset::Int, head::Tuple{Symbol,Int})
     return offset + bcftypesize(t) * len
 end
 
-function store!{T}(data::Vector{UInt8}, offset::Int, val::T)
+function store!(data::Vector{UInt8}, offset::Int, val::T) where T
     if offset + sizeof(T) > length(data)
         throw(BoundsError())
     end
@@ -612,7 +612,7 @@ function storestr!(data::Vector{UInt8}, offset::Int, str::String)
     return offset + len
 end
 
-function storevec!{T}(data::Vector{UInt8}, offset::Int, vec::Vector{T})
+function storevec!(data::Vector{UInt8}, offset::Int, vec::Vector{T}) where T
     t = T == Int8 ? :int8 :
         T == Int16 ? :int16 :
         T == Int32 ? :int32 :
@@ -642,7 +642,7 @@ function storevechead!(data::Vector{UInt8}, offset::Int, head::Tuple{Symbol,Int}
     end
 end
 
-function storevecbody!{T}(data::Vector{UInt8}, offset::Int, vec::Vector{T})
+function storevecbody!(data::Vector{UInt8}, offset::Int, vec::Vector{T}) where T
     len = length(vec)
     n = len * sizeof(T)
     if length(data) < offset + n

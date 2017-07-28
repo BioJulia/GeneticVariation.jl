@@ -6,21 +6,21 @@
 # This file is a part of BioJulia.
 # License is MIT: https://github.com/BioJulia/GeneticVariation.jl/blob/master/LICENSE.md
 
-@compat abstract type Mutation <: Position end
+abstract type Mutation <: Position end
 
 """
 A `Conserved` site describes a site where two aligned nucleotides are definately
 conserved. By definately conserved this means that the symbols of the site are
 non-ambiguity symbols, and they are the same symbol.
 """
-immutable Conserved <: Mutation end
+struct Conserved <: Mutation end
 
 """
 A `Mutated` site describes a site where two aligned nucleotides are definately
 mutated. By definately mutated this means that the symbols of the site are
 non-ambiguity symbols, and they are not the same symbol.
 """
-immutable Mutated <: Mutation end
+struct Mutated <: Mutation end
 
 """
 A `Transition` site describes a site where two aligned nucleotides are definately
@@ -28,7 +28,7 @@ mutated, and the type of mutation is a transition mutation.
 In other words, the symbols must not be ambiguity symbols, and they must
 be different such that they constitute a transition mutation: i.e. A<->G, or C<->T.
 """
-immutable Transition <: Mutation end
+struct Transition <: Mutation end
 
 """
 A `Transversion` site describes a site where two aligned nucleotides are
@@ -37,7 +37,7 @@ In other words, the symbols must not be ambiguity symbols, and they must
 be different such that they constitute a transversion mutation: i.e. A<->C,
 A<->T, G<->T, G<->C.
 """
-immutable Transversion <: Mutation end
+struct Transversion <: Mutation end
 
 
 # Masking functions
@@ -59,8 +59,8 @@ for A in (DNAAlphabet, RNAAlphabet)
     @eval begin
 
         # Counter types
-        @inline BioSequences.bp_counter_type{M<:Mutation}(::Type{M}, ::Type{$A{4}}) = Tuple{Int, Int}
-        @inline BioSequences.bp_start_counter{M<:Mutation}(::Type{M}, ::Type{$A{4}}) = Int(0), Int(0)
+        @inline BioSequences.bp_counter_type(::Type{M}, ::Type{$A{4}}) where M <: Mutation = Tuple{Int, Int}
+        @inline BioSequences.bp_start_counter(::Type{M}, ::Type{$A{4}}) where M <: Mutation = Int(0), Int(0)
 
         # Conserved
         @inline bp_chunk_count(::Type{Conserved}, ::Type{$A{2}}, a::UInt64, b::UInt64) = bp_chunk_count(Match, $A{2}, a, b)

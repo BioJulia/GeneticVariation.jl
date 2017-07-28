@@ -6,7 +6,7 @@
 # This file is a part of BioJulia.
 # License is MIT: https://github.com/BioJulia/GeneticVariation.jl/blob/master/LICENSE
 
-type Reader <: BioCore.IO.AbstractReader
+mutable struct Reader <: BioCore.IO.AbstractReader
     state::BioCore.Ragel.State
     header::Header
 
