@@ -10,37 +10,8 @@ const CDN = Union{BioSequences.DNACodon, BioSequences.RNACodon}
 const DEFAULT_TRANS = BioSequences.ncbi_trans_table[1]
 struct NG86 end
 
-@inline bases(::Type{BioSequences.DNACodon}) = BioSequences.ACGT
-@inline bases(::Type{BioSequences.RNACodon}) = BioSequences.ACGU
-
 """
-    classify_neighbors(codon::DNACodon)
-
-Computes and classifies the neighbors of a given `codon` as either a
-transition neighbor, or a transversion neighbor.
-"""
-function classify_neighbors(codon::C) where C <: CDN
-    tsn = Vector{C}()
-    tvn = Vector{C}()
-    codon_bases = collect(codon)
-    @inbounds for n in 1:3
-        i = codon_bases[n]
-        for j in bases(C)
-            if i != j
-                thiscdn = copy(codon_bases)
-                thiscdn[n] = j
-                ipur = ispurine(i)
-                jpur = ispurine(j)
-                topush = ifelse((ipur && jpur) || (!ipur && !jpur), tsn, tvn)
-                push!(topush, C(thiscdn...))
-            end
-        end
-    end
-    return tsn, tvn
-end
-
-"""
-    expected(::Type{NG86}, codon::C, k::Float64 = 1.0, code::GeneticCode)
+    expected{C<:CDN}(::Type{NG86}, codon::C, k::Float64 = 1.0, code::GeneticCode)
 
 Enumerate the number of expected synonymous and non-synonymous sites present at
 a codon.
@@ -195,7 +166,7 @@ function dNdS(::Type{NG86}, x::Vector{C}, y::Vector{C},
     N = (N_x + N_y) / 2.0
     # Compute S_d and N_d: The observed number of synonymous and nonsynonymous mutations.
     S_d = N_d = 0.0
-    for (i, j) in zip(x, y)
+    @inbounds for (i, j) in zip(x, y)
         S_i, N_i = observed(NG86, i, j, code)
         S_d += S_i
         N_d += N_i

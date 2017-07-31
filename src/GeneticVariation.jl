@@ -52,7 +52,10 @@ import BioSequences:
     bp_chunk_count,
     GeneticCode,
     ispurine,
-    AA_Term
+    AA_Term,
+    NucAlphs,
+    Kmer
+import Compat: @compat
 import Combinatorics.permutations
 import IntervalTrees: Interval, IntervalValue
 import Twiddle:
@@ -69,6 +72,6 @@ include("bcf/bcf.jl")
 include("site_counting.jl")
 include("distances/minhash.jl")
 include("distances/proportion.jl")
-include("ng86.jl")
+include("dnds.jl")
 
 end # Module GeneticVariation
