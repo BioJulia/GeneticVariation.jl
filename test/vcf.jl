@@ -265,7 +265,7 @@
         flush(writer)
 
         records2 = VCF.Record[]
-        for record in VCF.Reader(IOBuffer(takebuf_array(output)))
+        for record in VCF.Reader(IOBuffer(take!(output)))
             push!(records2, record)
         end
         @test records == records2

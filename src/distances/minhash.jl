@@ -8,7 +8,7 @@
 # This file is a part of BioJulia.
 # License is MIT: https://github.com/BioJulia/GeneticVariation.jl/blob/master/LICENSE.md
 
-immutable Jaccard end
+struct Jaccard end
 
 """
 [MASH distances](http://doi.org/10.1186/s13059-016-0997-x), based on MinHash
@@ -21,7 +21,7 @@ essentially the [Jaccard index](https://en.wikipedia.org/wiki/Jaccard_index)
 of the minhashes, with some additional modification to account for the size of
 the kmers used.
 """
-immutable MASH end
+struct MASH end
 
 @inline function distance(::Type{Jaccard}, sketch1::MinHashSketch, sketch2::MinHashSketch)
     sketch1.kmersize == sketch2.kmersize || error("sketches must have same kmer length")

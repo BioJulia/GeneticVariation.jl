@@ -6,7 +6,7 @@
 # This file is a part of BioJulia.
 # License is MIT: https://github.com/BioJulia/GeneticVariation.jl/blob/master/LICENSE
 
-type Record
+mutable struct Record
     # data and filled range
     data::Vector{UInt8}
     filled::UnitRange{Int}
@@ -302,7 +302,7 @@ function Record(base::Record;
         end
     end
 
-    return Record(takebuf_array(buf))
+    return Record(take!(buf))
 end
 
 function vcfformat(val)

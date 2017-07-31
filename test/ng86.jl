@@ -10,15 +10,15 @@
         s_ans = [0.0, 0.333, 1.0, 1.0, 0.333]
         for i in 1:endof(codons)
             cdn = codons[i]
-            @test_approx_eq_eps GeneticVariation.expected(NG86, cdn, 1.0, ncbi_trans_table[1])[1] s_ans[i] 1e-3
-            @test_approx_eq_eps GeneticVariation.expected(NG86, cdn, 1.0, ncbi_trans_table[1])[2] n_ans[i] 1e-3
+            @test GeneticVariation.expected(NG86, cdn, 1.0, ncbi_trans_table[1])[1] ≈ s_ans[i] atol=0.001
+            @test GeneticVariation.expected(NG86, cdn, 1.0, ncbi_trans_table[1])[2] ≈ n_ans[i] atol=0.001
         end
     end
 
     @testset "observed" begin
         function testobserved(a, b, ans)
-            @test_approx_eq_eps GeneticVariation.observed(NG86, a, b, ncbi_trans_table[1])[1] ans[1] 1e-3
-            @test_approx_eq_eps GeneticVariation.observed(NG86, a, b, ncbi_trans_table[1])[2] ans[2] 1e-3
+            @test GeneticVariation.observed(NG86, a, b, ncbi_trans_table[1])[1] ≈ ans[1] atol=0.001
+            @test GeneticVariation.observed(NG86, a, b, ncbi_trans_table[1])[2] ≈ ans[2] atol=0.001
         end
         testobserved(kmer"CCC", kmer"CGC", (0.0, 1.0))
         testobserved(kmer"GGG", kmer"GGC", (1.0, 0.0))

@@ -9,7 +9,7 @@
 # Types
 # -----
 
-@compat abstract type EvolutionaryDistance end
-@compat abstract type TsTv <: EvolutionaryDistance end
+abstract type EvolutionaryDistance end
+abstract type TsTv <: EvolutionaryDistance end
 
 include("proportion.jl")

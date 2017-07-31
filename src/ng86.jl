@@ -8,18 +8,18 @@
 
 const CDN = Union{BioSequences.DNACodon, BioSequences.RNACodon}
 const DEFAULT_TRANS = BioSequences.ncbi_trans_table[1]
-immutable NG86 end
+struct NG86 end
 
 @inline bases(::Type{BioSequences.DNACodon}) = BioSequences.ACGT
 @inline bases(::Type{BioSequences.RNACodon}) = BioSequences.ACGU
 
 """
-    classify_neighbor(codon::DNACodon)
+    classify_neighbors(codon::DNACodon)
 
 Computes and classifies the neighbors of a given `codon` as either a
 transition neighbor, or a transversion neighbor.
 """
-function classify_neighbors{C<:CDN}(codon::C)
+function classify_neighbors(codon::C) where C <: CDN
     tsn = Vector{C}()
     tvn = Vector{C}()
     codon_bases = collect(codon)
@@ -40,14 +40,14 @@ function classify_neighbors{C<:CDN}(codon::C)
 end
 
 """
-    expected{C<:CDN}(::Type{NG86}, codon::C, k::Float64 = 1.0, code::GeneticCode)
+    expected(::Type{NG86}, codon::C, k::Float64 = 1.0, code::GeneticCode)
 
 Enumerate the number of expected synonymous and non-synonymous sites present at
 a codon.
 
 Each site may be both partially synonymous and non-synonymous.
 """
-function expected{C<:CDN}(::Type{NG86}, codon::C, k::Float64, code::GeneticCode)
+function expected(::Type{NG86}, codon::C, k::Float64, code::GeneticCode) where C <: CDN
     tsn, tvn = classify_neighbors(codon)
     aa = code[codon]
     S = N = 0.0
@@ -73,7 +73,9 @@ function expected{C<:CDN}(::Type{NG86}, codon::C, k::Float64, code::GeneticCode)
     return (S / normalization), (N / normalization)
 end
 
-function expected{C<:CDN}(::Type{NG86}, codons::Vector{C}, k::Float64 = 1.0, code::GeneticCode = DEFAULT_TRANS)
+function expected(::Type{NG86}, codons::Vector{C},
+                  k::Float64 = 1.0,
+                  code::GeneticCode = DEFAULT_TRANS) where C <: CDN
     S = N = 0.0
     for codon in codons
         S_i, N_i = expected(NG86, codon, k, code)
@@ -83,7 +85,7 @@ function expected{C<:CDN}(::Type{NG86}, codons::Vector{C}, k::Float64 = 1.0, cod
     return S, N
 end
 
-@inline function classify_mutation{C<:CDN}(x::C, y::C, code::GeneticCode, weight::Float64 = 1.0)
+@inline function classify_mutation(x::C, y::C, code::GeneticCode, weight::Float64 = 1.0) where C <: CDN
     if code[x] == code[y]
         # Synonymous mutation.
         return weight, 0.0
@@ -98,13 +100,13 @@ end
 
 Identify which sites in two codons are different.
 """
-@inline function find_differences{C<:CDN}(x::C, y::C)
+@inline function find_differences(x::C, y::C) where C <: CDN
     positions = Int[1,2,3]
     filter!(i -> x[i] != y[i], positions)
     return positions, length(positions)
 end
 
-function observed{C<:CDN}(::Type{NG86}, x::C, y::C, code::GeneticCode = DEFAULT_TRANS)
+function observed(::Type{NG86}, x::C, y::C, code::GeneticCode = DEFAULT_TRANS) where C <: CDN
     if x == y # Early escape, codons are the same, no syn or nonsyn mutations.
         return 0.0, 0.0
     else
@@ -184,7 +186,8 @@ end
     - 3 / 4 * log(1 - 4.0 / 3 * p)
 end
 
-function dNdS{C<:CDN}(::Type{NG86}, x::Vector{C}, y::Vector{C}, k::Float64 = 1.0, code::GeneticCode = DEFAULT_TRANS)
+function dNdS(::Type{NG86}, x::Vector{C}, y::Vector{C},
+              k::Float64 = 1.0, code::GeneticCode = DEFAULT_TRANS) where C <: CDN
     # Compute S and N: The expected number of synonymous and nonsynonymous sites.
     S_x, N_x = expected(NG86, x, k, code)
     S_y, N_y = expected(NG86, y, k, code)

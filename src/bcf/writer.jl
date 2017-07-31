@@ -6,7 +6,7 @@
 # This file is a part of BioJulia.
 # License is MIT: https://github.com/BioJulia/GeneticVariation.jl/blob/master/LICENSE
 
-type Writer{T<:IO} <: BioCore.IO.AbstractWriter
+struct Writer{T<:IO} <: BioCore.IO.AbstractWriter
     stream::BGZFStreams.BGZFStream{T}
 end
 
@@ -26,7 +26,7 @@ function Writer(output::IO, header::VCF.Header)
         error("too long header")
     end
     write(stream, htol(Int32(len)))
-    data = takebuf_array(buf)
+    data = take!(buf)
     @assert length(data) == len
     write(stream, data)
     return Writer(stream)

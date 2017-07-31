@@ -5,7 +5,7 @@
 
     @testset "Specific count methods" begin
 
-        function generate_possibilities_tester{A<:NucleicAcidAlphabets}(::Type{A})
+        function generate_possibilities_tester(::Type{A}) where A <: NucAlphs
             symbols = alphabet(A)
             arra = Vector{eltype(A)}()
             arrb = Vector{eltype(A)}()
@@ -47,14 +47,14 @@
         @inline function issite(::Type{Mutated}, a::BioSequence, b::BioSequence, idx)
             return a[idx] != b[idx]
         end
-        @inline function testcount2{P<:BioSequences.Position}(::Type{P}, a::BioSequence, b::BioSequence)
+        @inline function testcount2(::Type{P}, a::BioSequence, b::BioSequence) where P <: BioSequences.Position
             k = 0
             @inbounds for idx in 1:min(endof(a), endof(b))
                 k += issite(P, a, b, idx)
             end
             return k
         end
-        @inline function testcount{P<:BioSequences.Position}(::Type{P}, a::BioSequence, b::BioSequence)
+        @inline function testcount(::Type{P}, a::BioSequence, b::BioSequence) where P <: BioSequences.Position
             k, c = 0, 0
             @inbounds for idx in 1:min(endof(a), endof(b))
                 isvalid = !(isgap(a[idx]) || isgap(b[idx])) && !(isambiguous(a[idx]) || isambiguous(b[idx]))
@@ -63,10 +63,10 @@
             end
             return k, c
         end
-        function testcounting{S<:Site}(::Type{S}, a::BioSequence, b::BioSequence)
+        function testcounting(::Type{S}, a::BioSequence, b::BioSequence) where S <: Site
             @test count(S, a, b) == count(S, b, a) == testcount(S, a, b)
         end
-        function testcounting2{S<:Site}(::Type{S}, a::BioSequence, b::BioSequence)
+        function testcounting2(::Type{S}, a::BioSequence, b::BioSequence) where S <: Site
             @test count(S, a, b) == count(S, b, a) == testcount2(S, a, b)
         end
         function testforencs(a::Int, b::Int, subset::Bool)

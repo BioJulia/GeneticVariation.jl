@@ -6,7 +6,7 @@
 # This file is a part of BioJulia.
 # License is MIT: https://github.com/BioJulia/GeneticVariation.jl/blob/master/LICENSE
 
-immutable Header
+struct Header
     metainfo::Vector{MetaInfo}
     sampleID::Vector{String}
 

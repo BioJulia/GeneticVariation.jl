@@ -14,14 +14,14 @@ In other words this so called p-distance is simply the proportion of sites
 between each pair of sequences, that are mutated (again where T determines
 what kind of mutation).
 """
-immutable Proportion{T} end
+struct Proportion{T} end
 
-@inline function distance{T}(::Type{Proportion{T}}, x::Sequence, y::Sequence)
+@inline function distance(::Type{Proportion{T}}, x::Sequence, y::Sequence) where T
     cs = count(T, x, y)
     return _pcorrection(Proportion{T}, cs, x, y)
 end
 
-@inline function pdistance{T}(::Type{T}, x, y)
+@inline function pdistance(::Type{T}, x, y) where T
     return distance(Proportion{T}, x, y)
 end
 

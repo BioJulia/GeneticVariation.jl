@@ -6,7 +6,7 @@
 # This file is a part of BioJulia.
 # License is MIT: https://github.com/BioJulia/GeneticVariation.jl/blob/master/LICENSE
 
-type MetaInfo
+mutable struct MetaInfo
     # data and filled range
     data::Vector{UInt8}
     filled::UnitRange{Int}
@@ -119,7 +119,7 @@ function MetaInfo(base::MetaInfo; tag=nothing, value=nothing)
         end
         print(buf, '>')
     end
-    return MetaInfo(takebuf_array(buf))
+    return MetaInfo(take!(buf))
 end
 
 function needs_quote(val::String)
