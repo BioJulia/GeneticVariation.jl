@@ -302,7 +302,7 @@ function Record(base::Record;
         end
     end
 
-    return Record(takebuf_array(buf))
+    return Record(take!(buf))
 end
 
 function vcfformat(val)

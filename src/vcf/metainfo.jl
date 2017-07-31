@@ -119,7 +119,7 @@ function MetaInfo(base::MetaInfo; tag=nothing, value=nothing)
         end
         print(buf, '>')
     end
-    return MetaInfo(takebuf_array(buf))
+    return MetaInfo(take!(buf))
 end
 
 function needs_quote(val::String)

@@ -26,7 +26,7 @@ function Writer(output::IO, header::VCF.Header)
         error("too long header")
     end
     write(stream, htol(Int32(len)))
-    data = takebuf_array(buf)
+    data = take!(buf)
     @assert length(data) == len
     write(stream, data)
     return Writer(stream)
