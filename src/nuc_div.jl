@@ -7,6 +7,41 @@
 # License is MIT: https://github.com/BioJulia/GeneticVariation.jl/blob/master/LICENSE.md
 
 """
+    count_unique_sequences(seqs::Vararg{BioSequence{A},N}) where {A <: Alphabet, N}
+
+Count the number of unique sequences in a set of sequences.
+"""
+@inline function count_unique_sequences(seqs::Vararg{BioSequence{A},N}) where {A <: Alphabet, N}
+    counts = Dict{BioSequence{A}, Int}()
+    @inbounds for seq in seqs
+        current = get(counts, seq, 0)
+        counts[seq] = current + 1
+    end
+    return counts
+end
+
+@inline function count_unique_sequences(seqs::Vector{BioSequence{A},N}) where {A <: Alphabet, N}
+    count_unique_sequences(seqs...)
+end
+
+@inline function allele_frequencies(seqs::Vararg{BioSequence{A},N}) where {A <: NucAlphs, N}
+    seq_counts = count_unique_sequences(seqs)
+    frequencies = Dict{BioSequence{A}, Float64}()
+    @inbounds for seq, count in seq_counts
+        frequencies[seq] = count / N
+    end
+    return frequencies
+end
+
+#=
+@inline function nuc_div(seqs::Vararg{BioSequence{A},N}) where {A<:NucAlphs, N}
+    scounts = count_unique_sequences(seqs)
+
+end
+=#
+
+
+"""
     nuc_div(d::Matrix{Int}, f::Vector{Float64})
 
 Compute nucleotide diversity using a matrix of the number of mutations
@@ -36,7 +71,7 @@ in the population.
 end
 
 function nuc_div(s::Vector{DNASequence})
-    nuc_div(extract_first(count_pairwise(Mutation, s)))
+    nuc_div(extract_first())
 end
 
 @inline function extract_first(d::Matrix{Tuple{Int,Int}})
