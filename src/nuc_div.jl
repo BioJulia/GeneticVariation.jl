@@ -1,83 +1,78 @@
 # nuc_div.jl
 # ==========
 #
-# Nucleotide diversity estimation using Nei and Li's 1979 method.
+# Nucleotide diversity estimation using Nei and Li's 1979 method for sequences.
 #
 # This file is a part of BioJulia.
 # License is MIT: https://github.com/BioJulia/GeneticVariation.jl/blob/master/LICENSE.md
 
-"""
-    count_unique_sequences(seqs::Vararg{BioSequence{A},N}) where {A <: Alphabet, N}
-
-Count the number of unique sequences in a set of sequences.
-"""
-@inline function count_unique_sequences(seqs::Vararg{BioSequence{A},N}) where {A <: Alphabet, N}
-    counts = Dict{BioSequence{A}, Int}()
-    @inbounds for seq in seqs
-        current = get(counts, seq, 0)
-        counts[seq] = current + 1
-    end
-    return counts
+@inline function _nalleles(alleles, counts, itersize::T) where {T}
+    return sum(values(counts))
 end
 
-@inline function count_unique_sequences(seqs::Vector{BioSequence{A},N}) where {A <: Alphabet, N}
-    count_unique_sequences(seqs...)
+@inline function _nalleles(alleles, counts, itersize::T) where {T<:Union{Base.HasLength,Base.HasShape}}
+    return length(alleles)
 end
 
-@inline function allele_frequencies(seqs::Vararg{BioSequence{A},N}) where {A <: NucAlphs, N}
-    seq_counts = count_unique_sequences(seqs)
-    frequencies = Dict{BioSequence{A}, Float64}()
-    @inbounds for seq, count in seq_counts
-        frequencies[seq] = count / N
+function allele_frequencies(alleles)
+    allele_counts = composition(alleles)
+    # Do a bit of dispatch here based on some iterator properties,
+    # as not all iterables have a length or size defined. In such a case,
+    # we fall back to a less efficient but equally value method.
+    n = _nalleles(alleles, allele_counts, Base.iteratorsize(typeof(alleles)))
+    frequencies = Dict{eltype(alleles), Float64}()
+    @inbounds for (allele, count) in allele_counts
+        frequencies[allele] = count / n
     end
     return frequencies
 end
 
-#=
-@inline function nuc_div(seqs::Vararg{BioSequence{A},N}) where {A<:NucAlphs, N}
-    scounts = count_unique_sequences(seqs)
-
-end
-=#
-
-
-"""
-    nuc_div(d::Matrix{Int}, f::Vector{Float64})
-
-Compute nucleotide diversity using a matrix of the number of mutations
-between sequence pairs, and a vector of the frequencies of each sequence
-in the population.
-"""
-@inline function nuc_div(d::Matrix{Int}, f::Vector{Float64})
-    tot = 0.0
-    @inbounds @simd for i = 1:endof(f), j = (i + 1):endof(f)
-        tot += d[i, j] * f[i] * f[j]
-    end
-    return 2 * tot
-end
-
-"""
-    nuc_div(d::Matrix{Int}, f::Vector{Float64})
-
-Compute nucleotide diversity using only a matrix of the number of mutations
-between sequence pairs.
-
-This assumes each sequence was present in equal frequencies
-in the population.
-"""
-@inline function nuc_div(d::Matrix{Int})
-    dsize = size(d)[2]
-    return nuc_div(d, fill(1 / dsize, dsize))
-end
-
-function nuc_div(s::Vector{DNASequence})
-    nuc_div(extract_first())
-end
-
-@inline function extract_first(d::Matrix{Tuple{Int,Int}})
+function extract_first(d::Matrix{Tuple{Int,Int}})
     o = similar(d, Int)
     @inbounds @simd for i in eachindex(d)
         o[i] = d[i][1]
     end
     return o
+end
+
+@inline function extract_dict!(dict::Dict{K,V}, keys::Vector{K}, values::Vector{V}) where {K,V}
+    @inbounds for (i, pair) in enumerate(dict)
+        keys[i] = pair[1]
+        values[i] = pair[2]
+    end
+end
+
+@inline function extract_dict(dict::Dict{K,V}) where {K,V}
+    keys = Vector{K}(length(dict))
+    values = Vector{V}(length(dict))
+    extract_dict!(dict, keys, values)
+    return keys, values
+end
+
+"""
+    nuc_div(m::M, f::V) where {M<:AbstractMatrix{Float64},V<:AbstractVector{Float64}}
+
+Compute nucleotide diversity using a matrix of the number of mutations
+between sequence pairs, and a vector of the frequencies of each sequence
+in the population.
+"""
+function nuc_div(m::M, f::V) where {M<:AbstractMatrix{Float64},V<:AbstractVector{Float64}}
+    π = 0.0
+    @inbounds for i = 1:endof(f), j = (i + 1):endof(f)
+        π += m[i, j] * f[i] * f[j]
+    end
+    return 2 * π
+end
+
+"""
+    nuc_div(sequences)
+
+Compute nucleotide diversity from any iterable that yields biosequence types.
+"""
+function nuc_div(sequences)
+    frequencies = allele_frequencies(sequences)
+    unique_sequences = collect(keys(frequencies))
+    n = length(unique_sequences)
+    mutations = extract_first(count_pairwise(Mutated, unique_sequences...))
+    return nuc_div(mutations, collect(values(frequencies)))
 end

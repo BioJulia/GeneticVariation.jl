@@ -25,6 +25,6 @@ include("bcf.jl")
 include("site_counting.jl")
 include("minhash.jl")
 include("ng86.jl")
-
+include("nuc_div.jl")
 
 end # Module TestGeneticVariation

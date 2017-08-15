@@ -27,6 +27,11 @@ export
     jaccard,
     NG86,
 
+    allele_frequencies,
+    
+    # Nucleotide diversity
+    nuc_div,
+
     # VCF and BCF
     VCF,
     BCF,
