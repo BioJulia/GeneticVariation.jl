@@ -28,7 +28,7 @@ export
     NG86,
 
     allele_frequencies,
-    
+
     # Nucleotide diversity
     nuc_div,
 
@@ -78,5 +78,6 @@ include("site_counting.jl")
 include("distances/minhash.jl")
 include("distances/proportion.jl")
 include("dnds.jl")
+include("nuc_div.jl")
 
 end # Module GeneticVariation
