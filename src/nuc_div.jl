@@ -27,10 +27,10 @@ function allele_frequencies(alleles)
     return frequencies
 end
 
-function extract_first(d::Matrix{Tuple{Int,Int}})
-    o = similar(d, Int)
-    @inbounds @simd for i in eachindex(d)
-        o[i] = d[i][1]
+function pdist(d::Matrix{Tuple{Int,Int}})
+    o = similar(d, Float64)
+    @inbounds for i in eachindex(d)
+        o[i] = d[i][1] / d[i][2]
     end
     return o
 end
@@ -73,6 +73,6 @@ function nuc_div(sequences)
     frequencies = allele_frequencies(sequences)
     unique_sequences = collect(keys(frequencies))
     n = length(unique_sequences)
-    mutations = extract_first(count_pairwise(Mutated, unique_sequences...))
+    mutations = pdist(count_pairwise(Mutated, unique_sequences...))
     return nuc_div(mutations, collect(values(frequencies)))
 end
