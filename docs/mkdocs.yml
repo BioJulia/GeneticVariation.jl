@@ -40,4 +40,5 @@ pages:
 - IO:
     - VCF and BCF formatted files: io/vcf-bcf.md
 - Mutation Counting: site_counting.md
+- Genetic Diversity: diversity.md
 - Contributing: contributing.md
