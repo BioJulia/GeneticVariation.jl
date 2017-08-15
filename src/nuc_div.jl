@@ -15,7 +15,7 @@ end
 end
 
 function allele_frequencies(alleles)
-    allele_counts = composition(alleles)
+    allele_counts = BioSequences.composition(alleles)
     # Do a bit of dispatch here based on some iterator properties,
     # as not all iterables have a length or size defined. In such a case,
     # we fall back to a less efficient but equally value method.
