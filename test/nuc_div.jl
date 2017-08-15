@@ -8,7 +8,7 @@
 
     testQ = [0.40, 0.20, 0.20, 0.20]
 
-    @test nuc_div(testP, testQ) ≈ 0.0035
+    @test nuc_div(testP, testQ) ≈ 0.00352
 
 
 end
