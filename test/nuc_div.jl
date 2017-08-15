@@ -10,5 +10,26 @@
 
     @test nuc_div(testP, testQ) ≈ 0.00352
 
+    # A simple test to ensure the math works out AND the allele
+    # frequencies and so on are properly computed from sequence data.
+    testSeqs = [dna"AAAACTTTTACCCCCGGGGG",
+                dna"AAAACTTTTACCCCCGGGGG",
+                dna"AAAACTTTTACCCCCGGGGG",
+                dna"AAAACTTTTACCCCCGGGGG",
 
+                dna"AAAAATTTTACCCCCGTGGG",
+                dna"AAAAATTTTACCCCCGTGGG",
+
+                dna"AAAACTTTTTCCCCCGTAGG",
+                dna"AAAACTTTTTCCCCCGTAGG",
+
+                dna"AAAAATTTTTCCCCCGGAGG",
+                dna"AAAAATTTTTCCCCCGGAGG"]
+
+    testP = [0.0 0.1 0.15 0.15;
+             0.1 0.0 0.15 0.15;
+             0.15 0.15 0.0 0.1;
+             0.15 0.15 0.1 0.0;]
+
+    @test nuc_div(testSeqs) == @test nuc_div(testP, testQ)
 end
