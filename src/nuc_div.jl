@@ -73,7 +73,7 @@ function nuc_div(sequences)
     frequencies = allele_frequencies(sequences)
     unique_sequences = collect(keys(frequencies))
     n = length(unique_sequences)
-    if n == 0
+    if n < 2
         return 0.0
     else
         mutations = pdist(BioSequences.count_pairwise(Mutated, unique_sequences...))
