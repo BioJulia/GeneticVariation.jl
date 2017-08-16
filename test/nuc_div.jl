@@ -31,5 +31,5 @@
              0.15 0.15 0.0 0.1;
              0.15 0.15 0.1 0.0;]
 
-    @test nuc_div(testSeqs) == @test nuc_div(testP, testQ)
+    @test nuc_div(testSeqs) == nuc_div(testP, testQ)
 end
