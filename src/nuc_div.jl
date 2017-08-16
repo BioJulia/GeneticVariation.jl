@@ -56,7 +56,7 @@ Compute nucleotide diversity using a matrix of the number of mutations
 between sequence pairs, and a vector of the frequencies of each sequence
 in the population.
 """
-function nuc_div(m::M, f::V) where {M<:AbstractMatrix{Float64},V<:AbstractVector{Float64}}
+function nuc_div(m::AbstractMatrix{Float64}, f::AbstractVector{Float64})
     π = 0.0
     @inbounds for i = 1:endof(f), j = (i + 1):endof(f)
         π += m[i, j] * f[i] * f[j]
