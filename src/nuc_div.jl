@@ -6,26 +6,6 @@
 # This file is a part of BioJulia.
 # License is MIT: https://github.com/BioJulia/GeneticVariation.jl/blob/master/LICENSE.md
 
-@inline function _nalleles(alleles, counts, itersize::T) where {T}
-    return sum(values(counts))
-end
-
-@inline function _nalleles(alleles, counts, itersize::T) where {T<:Union{Base.HasLength,Base.HasShape}}
-    return length(alleles)
-end
-
-function allele_frequencies(alleles)
-    allele_counts = BioSequences.composition(alleles)
-    # Do a bit of dispatch here based on some iterator properties,
-    # as not all iterables have a length or size defined. In such a case,
-    # we fall back to a less efficient but equally value method.
-    n = _nalleles(alleles, allele_counts, Base.iteratorsize(typeof(alleles)))
-    frequencies = Dict{eltype(alleles), Float64}()
-    @inbounds for (allele, count) in allele_counts
-        frequencies[allele] = count / n
-    end
-    return frequencies
-end
 
 function pdist(d::Matrix{Tuple{Int,Int}})
     o = similar(d, Float64)
