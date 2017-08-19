@@ -50,7 +50,7 @@ end
 Compute nucleotide diversity from any iterable that yields biosequence types.
 """
 function nuc_div(sequences)
-    frequencies = allele_frequencies(sequences)
+    frequencies = gene_frequencies(sequences)
     unique_sequences = collect(keys(frequencies))
     n = length(unique_sequences)
     if n < 2
