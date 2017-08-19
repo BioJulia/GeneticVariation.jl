@@ -9,7 +9,7 @@
                                        "ATCGATCG" => 0.5,
                                        "AGGGGG" => 0.25)
 
-        function test_gene_frequences(genes, answer, seqtype)
+        function test_gene_frequencies(genes, answer, seqtype)
             test_genes = convert(Vector{seqtype})
             test_answer = convert(Dict{seqtype, Float64}, answer)
             @test gene_frequencies(test_genes) == test_answer
