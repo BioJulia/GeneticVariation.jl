@@ -10,7 +10,7 @@
                                        "AGGGGG" => 0.25)
 
         function test_gene_frequencies(genes, answer, seqtype)
-            test_genes = convert(Vector{seqtype})
+            test_genes = convert(Vector{seqtype}, sequences)
             test_answer = convert(Dict{seqtype, Float64}, answer)
             @test gene_frequencies(test_genes) == test_answer
             @test GeneticVariation._gene_frequencies(test_genes, seqtype, Base.SizeUnknown()) == test_answer
