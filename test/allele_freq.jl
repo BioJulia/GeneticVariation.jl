@@ -17,11 +17,8 @@
             @test GeneticVariation._gene_frequencies(test_genes, seqtype, Base.HasShape()) == test_answer
         end
 
-        for alph in (DNAAlphabet, RNAAlphabet)
-            for n in (2, 4)
-                test_gene_frequencies(sequences, answer, BioSequence{alph{n}})
-            end
+        for n in (2, 4)
+            test_gene_frequencies(sequences, answer, BioSequence{DNAAlphabet{n}})
         end
-
     end
 end
