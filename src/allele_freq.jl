@@ -28,7 +28,7 @@ Compute the gene frequencies for any iterable with an `eltype` which is a
 concrete subtype of the abstract `Sequence` type.
 """
 function gene_frequencies(iterable)
-    return _gene_frequencies(iterable, eltype(iterable), Base.iteratorsize(a))
+    return _gene_frequencies(iterable, eltype(iterable), Base.iteratorsize(iterable))
 end
 
 # Default for most iterables, throws an error.
