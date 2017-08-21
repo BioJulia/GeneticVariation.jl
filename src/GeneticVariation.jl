@@ -31,7 +31,7 @@ export
     gene_frequencies,
 
     # Nucleotide diversity
-    nuc_div,
+    NL79,
 
     # VCF and BCF
     VCF,

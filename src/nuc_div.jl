@@ -30,13 +30,13 @@ end
 end
 
 """
-    nuc_div(m::M, f::V) where {M<:AbstractMatrix{Float64},V<:AbstractVector{Float64}}
+    NL79(m::M, f::V) where {M<:AbstractMatrix{Float64},V<:AbstractVector{Float64}}
 
 Compute nucleotide diversity using a matrix of the number of mutations
 between sequence pairs, and a vector of the frequencies of each sequence
 in the population.
 """
-function nuc_div(m::AbstractMatrix{Float64}, f::AbstractVector{Float64})
+function NL79(m::AbstractMatrix{Float64}, f::AbstractVector{Float64})
     π = 0.0
     @inbounds for i = 1:endof(f), j = (i + 1):endof(f)
         π += m[i, j] * f[i] * f[j]
@@ -45,11 +45,47 @@ function nuc_div(m::AbstractMatrix{Float64}, f::AbstractVector{Float64})
 end
 
 """
-    nuc_div(sequences)
+    NL79(sequences)
 
-Compute nucleotide diversity from any iterable that yields biosequence types.
+Compute nucleotide diversity, as first described by Nei and Li in 1979.
+
+This measure is defined as the average number of nucleotide differences per site
+between two DNA sequences in all possible pairs in the sample population, and is
+often denoted by the greek letter pi.
+
+`Sequences` should be any iterable that yields biosequence types.
+
+# Examples
+
+```jldoctest
+julia> testSeqs = [dna"AAAACTTTTACCCCCGGGGG",
+                   dna"AAAACTTTTACCCCCGGGGG",
+                   dna"AAAACTTTTACCCCCGGGGG",
+                   dna"AAAACTTTTACCCCCGGGGG",
+                   dna"AAAAATTTTACCCCCGTGGG",
+                   dna"AAAAATTTTACCCCCGTGGG",
+                   dna"AAAACTTTTTCCCCCGTAGG",
+                   dna"AAAACTTTTTCCCCCGTAGG",
+                   dna"AAAAATTTTTCCCCCGGAGG",
+                   dna"AAAAATTTTTCCCCCGGAGG"]
+10-element Array{BioSequences.BioSequence{BioSequences.DNAAlphabet{4}},1}:
+ AAAACTTTTACCCCCGGGGG
+ AAAACTTTTACCCCCGGGGG
+ AAAACTTTTACCCCCGGGGG
+ AAAACTTTTACCCCCGGGGG
+ AAAAATTTTACCCCCGTGGG
+ AAAAATTTTACCCCCGTGGG
+ AAAACTTTTTCCCCCGTAGG
+ AAAACTTTTTCCCCCGTAGG
+ AAAAATTTTTCCCCCGGAGG
+ AAAAATTTTTCCCCCGGAGG
+
+ julia> NL79(testSeqs)
+ 0.096
+
+```
 """
-function nuc_div(sequences)
+function NL79(sequences)
     frequencies = gene_frequencies(sequences)
     unique_sequences = collect(keys(frequencies))
     n = length(unique_sequences)

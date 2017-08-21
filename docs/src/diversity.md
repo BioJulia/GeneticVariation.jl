@@ -37,6 +37,12 @@ gene_frequencies
 
 ## Nucleotide diversity
 
+Nucleotide diversity is a concept in molecular genetics which is used to measure
+the degree of polymorphism within a population.
+
+There are different methods which can be used to compute measures of nucleotide
+diversity, we list them below, and show how to compute them using GeneticVariation. 
+
 ```@docs
-nuc_div
+NL79
 ```
