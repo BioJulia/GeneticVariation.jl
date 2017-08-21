@@ -93,6 +93,6 @@ function NL79(sequences)
         return 0.0
     else
         mutations = pdist(BioSequences.count_pairwise(Mutated, unique_sequences...))
-        return nuc_div(mutations, collect(values(frequencies)))
+        return NL79(mutations, collect(values(frequencies)))
     end
 end
