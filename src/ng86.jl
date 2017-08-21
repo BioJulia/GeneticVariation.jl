@@ -8,17 +8,84 @@
 
 const CDN = Union{BioSequences.DNACodon, BioSequences.RNACodon}
 const DEFAULT_TRANS = BioSequences.ncbi_trans_table[1]
-struct NG86 end
 
 """
-    expected{C<:CDN}(::Type{NG86}, codon::C, k::Float64 = 1.0, code::GeneticCode)
+    NG86(x, y, k::Float64 = 1.0, code::GeneticCode)
+
+Compute dNdS statistics, using the Nei and Goborjei 1986 method.
+
+This function requires two iterables `x` and `y`, which yield `DNACodon` or
+`RNACodon` type variables. These two types are defined in the BioSequences
+package.
+"""
+function NG86(x, y, k::Float64 = 1.0, code::GeneticCode = DEFAULT_TRANS)
+    _NG86(x, y, k, code, eltype(x), eltype(y))
+end
+
+"""
+    NG86(x::BioSequence{A}, y::BioSequence{A}, k::Float64, code::GeneticCode) where {A <: NucAlphs}
+
+Compute dNdS statistics, using the Nei and Goborjei 1986 method.
+
+This method adds conveinience when working with DNA or RNA sequences, by taking
+two sequences, and creating two vectors of aligned codons from them. These two
+iterables are then passed into the generic NG86 method.
+"""
+function NG86(x::BioSequence{A}, y::BioSequence{A}, k::Float64, code::GeneticCode) where {A <: NucAlphs}
+    xcdns, ycdns = aligned_codons(x, y)
+    return NG86(xcdns, ycdns, opt...)
+end
+
+"""
+    pairwise_do
+"""
+function pairwise_do(f::Function, x::Vector{B}, dest::Matrix, opt...) where B<:BioSequence
+    n = length(x)
+    @assert size(dest) == (n, n) "The size of the dest matrix is not appropriate."
+    if n >= 2
+        results = Matrix{Tuple{Float64, Float64}}(n, n)
+        for i in 1:n
+            results[i,i] = 0.0, 0.0
+            for j in (i + 1):n
+                results[i,j] = results[j,i] = NG86(x[i], x[j], k, code)
+            end
+        end
+        return results
+    else
+        error("At least two sequences are required.")
+    end
+end
+
+function _NG86(x, y, k::Float64, code::GeneticCode, xtype::C, ytype::C) where C <: CDN
+    # Compute S and N: The expected number of synonymous and nonsynonymous sites.
+    S_x, N_x = expected_NG86(NG86, x, k, code)
+    S_y, N_y = expected_NG86(NG86, y, k, code)
+    S = (S_x + S_y) / 2.0
+    N = (N_x + N_y) / 2.0
+    # Compute S_d and N_d: The observed number of synonymous and nonsynonymous mutations.
+    S_d = N_d = 0.0
+    @inbounds for (i, j) in zip(x, y)
+        S_i, N_i = observed(NG86, i, j, code)
+        S_d += S_i
+        N_d += N_i
+    end
+    # P_s and P_n: The proportion of and synonymous and nonsynonymous differences
+    P_s = S_d / S
+    P_n = N_d / N
+    dN = d_(P_n)
+    dS = d_(P_s)
+    return dN, dS
+end
+
+"""
+    expected_NG86(codon::C, k::Float64, code::GeneticCode)
 
 Enumerate the number of expected synonymous and non-synonymous sites present at
 a codon.
 
 Each site may be both partially synonymous and non-synonymous.
 """
-function expected(::Type{NG86}, codon::C, k::Float64, code::GeneticCode) where C <: CDN
+function expected_NG86(codon::C, k::Float64, code::GeneticCode)
     tsn, tvn = classify_neighbors(codon)
     aa = code[codon]
     S = N = 0.0
@@ -44,12 +111,18 @@ function expected(::Type{NG86}, codon::C, k::Float64, code::GeneticCode) where C
     return (S / normalization), (N / normalization)
 end
 
-function expected(::Type{NG86}, codons::Vector{C},
-                  k::Float64 = 1.0,
-                  code::GeneticCode = DEFAULT_TRANS) where C <: CDN
+function expected_NG86(codons, k::Float64 = 1.0, code::GeneticCode = DEFAULT_TRANS)
+    return _expected_NG86(codons, k, code, eltype(codons))
+end
+
+function _expected_NG86(codons, k::Float64, code::GeneticCode, etype)
+    return error("Iterable not supported.")
+end
+
+function _expected_NG86(codons, k::Float64, code::GeneticCode, etype::C)
     S = N = 0.0
-    for codon in codons
-        S_i, N_i = expected(NG86, codon, k, code)
+    @inbounds for codon in codons
+        S_i, N_i = _expected_NG86(codon, k, code, etype)
         S += S_i
         N += N_i
     end
@@ -77,7 +150,7 @@ Identify which sites in two codons are different.
     return positions, length(positions)
 end
 
-function observed(::Type{NG86}, x::C, y::C, code::GeneticCode = DEFAULT_TRANS) where C <: CDN
+function observed_NG86(x::C, y::C, code::GeneticCode = DEFAULT_TRANS) where C <: CDN
     if x == y # Early escape, codons are the same, no syn or nonsyn mutations.
         return 0.0, 0.0
     else
@@ -155,26 +228,4 @@ end
 
 @inline function d_(p::Float64)
     - 3 / 4 * log(1 - 4.0 / 3 * p)
-end
-
-function dNdS(::Type{NG86}, x::Vector{C}, y::Vector{C},
-              k::Float64 = 1.0, code::GeneticCode = DEFAULT_TRANS) where C <: CDN
-    # Compute S and N: The expected number of synonymous and nonsynonymous sites.
-    S_x, N_x = expected(NG86, x, k, code)
-    S_y, N_y = expected(NG86, y, k, code)
-    S = (S_x + S_y) / 2.0
-    N = (N_x + N_y) / 2.0
-    # Compute S_d and N_d: The observed number of synonymous and nonsynonymous mutations.
-    S_d = N_d = 0.0
-    @inbounds for (i, j) in zip(x, y)
-        S_i, N_i = observed(NG86, i, j, code)
-        S_d += S_i
-        N_d += N_i
-    end
-    # P_s and P_n: The proportion of and synonymous and nonsynonymous differences
-    P_s = S_d / S
-    P_n = N_d / N
-    dN = d_(P_n)
-    dS = d_(P_s)
-    return dN, dS
 end

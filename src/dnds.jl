@@ -8,10 +8,32 @@
 
 const CDN = Union{BioSequences.DNACodon, BioSequences.RNACodon}
 const DEFAULT_TRANS = BioSequences.ncbi_trans_table[1]
+#=
+struct AlignedCodons{T<:NucAlphs}
+    x::BioSequence{T}
+    y::BioSequence{T}
+end
 
-@inline bases(::Type{BioSequences.DNACodon}) = BioSequences.ACGT
-@inline bases(::Type{BioSequences.RNACodon}) = BioSequences.ACGU
+@inline start(ac::AlignedCodons)::Int = 1
+@inline function next(ac::AlignedCodons{T}, state::Int) where T<: NucAlphs
+    cdnx, okx = BioSequences.extract_kmer_impl(x, state, 3)
+    cdny, oky = BioSequences.extract_kmer_impl(y, state, 3)
+    state += 3
+    if okx && oky
+        return (cdnx, cdny), state
+    else
+        return next(ac, state)
+    end
+end
+@inline function done(ac::AlignedCodons, state::Int)::Bool
+    return state + 2 > min(endof(ac.x), endof(ac.y))
+end
+=#
+"""
+    aligned_codons(x::BioSequence{T}, y::BioSequence{T}, start::Int = 1) where T <: NucAlphs
 
+Create two
+"""
 function aligned_codons(x::BioSequence{T}, y::BioSequence{T}, start::Int = 1) where T <: NucAlphs
     xcdns = Vector{Kmer{eltype(T), 3}}()
     ycdns = Vector{Kmer{eltype(T), 3}}()
@@ -28,11 +50,14 @@ function aligned_codons(x::BioSequence{T}, y::BioSequence{T}, start::Int = 1) wh
     return xcdns, ycdns
 end
 
+@inline bases(::Type{BioSequences.DNACodon}) = BioSequences.ACGT
+@inline bases(::Type{BioSequences.RNACodon}) = BioSequences.ACGU
+
 """
     classify_neighbor(codon::DNACodon)
 
-Computes and classifies the neighbors of a given `codon` as either a
-transition neighbor, or a transversion neighbor.
+Compute and classify the neighbors of a given `codon` as either a transitio
+neighbor, or a transversion neighbor.
 """
 function classify_neighbors(codon::C) where C <: CDN
     tsn = Vector{C}()
@@ -54,21 +79,17 @@ function classify_neighbors(codon::C) where C <: CDN
     return tsn, tvn
 end
 
-function dNdS(::Type{T}, x::BioSequence{A}, y::BioSequence{A}, opt...) where {T, A <: NucAlphs}
-    return dNdS(T, aligned_codons(x, y)..., opt...)
-end
-
-function pairwise_dNdS(::Type{T}, x::Vector{V}, opt...) where {T, V}
+function pairwise_do!(f::Function, x::Vector{B}, dest::Matrix, opt...) where B<:BioSequence
     n = length(x)
-    @assert n >= 2 "At least two sequences are required."
-    results = Matrix{Tuple{Float64, Float64}}(n, n)
+    @assert size(dest) == (n, n) "The size of the dest matrix is not appropriate."
+    @assert l >= 2 "Not enough sequences."
     for i in 1:n
-        results[i,i] = 0.0, 0.0
+        dest[i,i] = zero(eltype(dest))
         for j in (i + 1):n
-            results[i,j] = results[j,i] = dNdS(T, x[i], x[j], opt...)
+            dest[i,j] = dest[j,i] = f(x[i], x[j], opt...)
         end
     end
-    return results
+    return dest
 end
 
-include("ng86.jl")
+include("NG86.jl")

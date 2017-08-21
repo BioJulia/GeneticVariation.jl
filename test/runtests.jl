@@ -24,7 +24,7 @@ include("vcf.jl")
 include("bcf.jl")
 include("site_counting.jl")
 include("minhash.jl")
-include("ng86.jl")
+include("NG86.jl")
 include("allele_freq.jl")
 include("nuc_div.jl")
 
