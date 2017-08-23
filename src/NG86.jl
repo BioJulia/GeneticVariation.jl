@@ -6,9 +6,6 @@
 # This file is a part of BioJulia.
 # License is MIT: https://github.com/BioJulia/GeneticVariation.jl/blob/master/LICENSE.md
 
-const CDN = Union{BioSequences.DNACodon, BioSequences.RNACodon}
-const DEFAULT_TRANS = BioSequences.ncbi_trans_table[1]
-
 """
     NG86(x, y, k::Float64 = 1.0, code::GeneticCode)
 
@@ -56,7 +53,7 @@ function pairwise_do(f::Function, x::Vector{B}, dest::Matrix, opt...) where B <:
     end
 end
 
-function _NG86(x, y, k::Float64, code::GeneticCode, xtype::C, ytype::C) where C <: CDN
+function _NG86(x, y, k::Float64, code::GeneticCode, xtype::Type{C}, ytype::Type{C}) where C <: CDN
     # Compute S and N: The expected number of synonymous and nonsynonymous sites.
     S_x, N_x = expected_NG86(NG86, x, k, code)
     S_y, N_y = expected_NG86(NG86, y, k, code)
@@ -77,7 +74,7 @@ function _NG86(x, y, k::Float64, code::GeneticCode, xtype::C, ytype::C) where C 
     return dN, dS
 end
 
-function _NG86_2(x, y, k::Float64, code::GeneticCode, addone::Bool, xtype::C, ytype::C) where C <: CDN
+function _NG86_2(x, y, k::Float64, code::GeneticCode, addone::Bool, xtype::Type{C}, ytype::Type{C}) where C <: CDN
     S = N = 0.0 # Expected no. of syn and nonsyn sites.
     DS = DN = 0.0 # Observed no. of syn and nonsyn mutations.
     # Iterate over every pair of codons.
