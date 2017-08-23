@@ -1,4 +1,4 @@
-# ng86.jl
+# NG86.jl
 # =======
 #
 # dNdS computation using the NG86 method.
