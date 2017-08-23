@@ -55,8 +55,8 @@ end
 
 function _NG86(x, y, k::Float64, code::GeneticCode, xtype::Type{C}, ytype::Type{C}) where C <: CDN
     # Compute S and N: The expected number of synonymous and nonsynonymous sites.
-    S_x, N_x = expected_NG86(NG86, x, k, code)
-    S_y, N_y = expected_NG86(NG86, y, k, code)
+    S_x, N_x = expected_NG86(x, k, code)
+    S_y, N_y = expected_NG86(y, k, code)
     S = (S_x + S_y) / 2.0
     N = (N_x + N_y) / 2.0
     # Compute S_d and N_d: The observed number of synonymous and nonsynonymous mutations.
