@@ -92,4 +92,4 @@ function pairwise_do!(f::Function, x::Vector{B}, dest::Matrix, opt...) where B<:
     return dest
 end
 
-include("NG86.jl")
+include("ng86.jl")
