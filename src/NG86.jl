@@ -136,7 +136,7 @@ function _expected_NG86(codons, k::Float64, code::GeneticCode, etype)
     return error("Iterable not supported.")
 end
 
-function _expected_NG86(codons, k::Float64, code::GeneticCode, etype::CDN)
+function _expected_NG86(codons, k::Float64, code::GeneticCode, etype::Type{C}) where C <: CDN
     S = N = 0.0
     @inbounds for codon in codons
         S_i, N_i = _expected_NG86(codon, k, code, etype)
