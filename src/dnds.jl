@@ -8,6 +8,7 @@
 
 const CDN = Union{BioSequences.DNACodon, BioSequences.RNACodon}
 const DEFAULT_TRANS = BioSequences.ncbi_trans_table[1]
+const CDN_POS_MASKS = (0xFFFFFFFFFFFFFFCF, 0xFFFFFFFFFFFFFFF3, 0xFFFFFFFFFFFFFFFC)
 #=
 struct AlignedCodons{T<:NucAlphs}
     x::BioSequence{T}
@@ -48,35 +49,6 @@ function aligned_codons(x::BioSequence{T}, y::BioSequence{T}, start::Int = 1) wh
         pos += 3
     end
     return xcdns, ycdns
-end
-
-@inline bases(::Type{BioSequences.DNACodon}) = BioSequences.ACGT
-@inline bases(::Type{BioSequences.RNACodon}) = BioSequences.ACGU
-
-"""
-    classify_neighbor(codon::DNACodon)
-
-Compute and classify the neighbors of a given `codon` as either a transitio
-neighbor, or a transversion neighbor.
-"""
-function classify_neighbors(codon::C) where C <: CDN
-    tsn = Vector{C}()
-    tvn = Vector{C}()
-    codon_bases = collect(codon)
-    @inbounds for n in 1:3
-        i = codon_bases[n]
-        for j in bases(C)
-            if i != j
-                thiscdn = copy(codon_bases)
-                thiscdn[n] = j
-                ipur = ispurine(i)
-                jpur = ispurine(j)
-                topush = ifelse((ipur && jpur) || (!ipur && !jpur), tsn, tvn)
-                push!(topush, C(thiscdn...))
-            end
-        end
-    end
-    return tsn, tvn
 end
 
 function pairwise_do!(f::Function, x::Vector{B}, dest::Matrix, opt...) where B<:BioSequence

@@ -15,8 +15,8 @@ This function requires two iterables `x` and `y`, which yield `DNACodon` or
 `RNACodon` type variables. These two types are defined in the BioSequences
 package.
 """
-function NG86(x, y, k::Float64 = 1.0, code::GeneticCode = DEFAULT_TRANS)
-    _NG86(x, y, k, code, eltype(x), eltype(y))
+function NG86(x, y, k::Float64 = 1.0, code::GeneticCode = DEFAULT_TRANS, addone::Bool = false)
+    _NG86(x, y, k, code, addone, eltype(x), eltype(y))
 end
 
 """
@@ -28,7 +28,7 @@ This method adds conveinience when working with DNA or RNA sequences, by taking
 two sequences, and creating two vectors of aligned codons from them. These two
 iterables are then passed into the generic NG86 method.
 """
-function NG86(x::BioSequence{A}, y::BioSequence{A}, k::Float64, code::GeneticCode) where {A <: NucAlphs}
+function NG86(x::BioSequence{A}, y::BioSequence{A}, opt...) where {A <: NucAlphs}
     xcdns, ycdns = aligned_codons(x, y)
     return NG86(xcdns, ycdns, opt...)
 end
@@ -53,30 +53,32 @@ function pairwise_do(f::Function, x::Vector{B}, dest::Matrix, opt...) where B <:
     end
 end
 
-function _NG86(x, y, k::Float64, code::GeneticCode, xtype::Type{C}, ytype::Type{C}) where C <: CDN
+function _NG86(x, y, k::Float64, code::GeneticCode, addone::Bool, xtype::Type{C}, ytype::Type{C}) where C <: CDN
     # Compute S and N: The expected number of synonymous and nonsynonymous sites.
     S_x, N_x = expected_NG86(x, k, code)
     S_y, N_y = expected_NG86(y, k, code)
     S = (S_x + S_y) / 2.0
     N = (N_x + N_y) / 2.0
-    # Compute S_d and N_d: The observed number of synonymous and nonsynonymous mutations.
-    S_d = N_d = 0.0
+    # Compute DS and DN: The observed number of synonymous and nonsynonymous mutations.
+    DS = ifelse(addone, 1.0, 0.0)
+    DN = 0.0
     @inbounds for (i, j) in zip(x, y)
-        S_i, N_i = observed_NG86(i, j, code)
-        S_d += S_i
-        N_d += N_i
+        DS_i, DN_i = observed_NG86(i, j, code)
+        DS += DS_i
+        DN += DN_i
     end
     # P_s and P_n: The proportion of and synonymous and nonsynonymous differences
-    P_s = S_d / S
-    P_n = N_d / N
-    dN = d_(P_n)
-    dS = d_(P_s)
+    dN = d_(DN / N)
+    dS = d_(DS / S)
     return dN, dS
 end
 
 function _NG86_2(x, y, k::Float64, code::GeneticCode, addone::Bool, xtype::Type{C}, ytype::Type{C}) where C <: CDN
-    S = N = 0.0 # Expected no. of syn and nonsyn sites.
-    DS = DN = 0.0 # Observed no. of syn and nonsyn mutations.
+    # Expected no. of syn and nonsyn sites.
+    S = N = 0.0
+    # Observed no. of syn and nonsyn mutations.
+    DS = ifelse(addone, 1.0, 0.0)
+    DN = 0.0
     # Iterate over every pair of codons.
     @inbounds for (i, j) in zip(x, y)
         si, ni = expected_NG86(i, k, code)
@@ -90,43 +92,52 @@ function _NG86_2(x, y, k::Float64, code::GeneticCode, addone::Bool, xtype::Type{
     S = S / 2.0
     N = N / 2.0
     dN = d_(DN / N)
-    dS = addone ? d_((DS + 1) / S) : d_(DS / S)
+    dS = d_(DS / S)
     return dN, dS
 end
 
 """
-    expected_NG86(codon::C, k::Float64, code::GeneticCode)
+    expected_NG86(codon::C, k::Float64, code::GeneticCode) where {C <: CDN}
 
 Enumerate the number of expected synonymous and non-synonymous sites present at
 a codon.
 
 Each site may be both partially synonymous and non-synonymous.
 """
-function expected_NG86(codon::CDN, k::Float64, code::GeneticCode)
-    tsn, tvn = classify_neighbors(codon)
+function expected_NG86(codon::C, k::Float64, code::GeneticCode) where {C <: CDN}
+    cdn_bits = UInt64(codon)
     aa = code[codon]
     S = N = 0.0
-    for neighbor in tsn
-        if code[neighbor] == AA_Term
-            N += 1.0
-        elseif code[neighbor] == aa
-            S += 1.0
-        else
-            N += 1.0
-        end
-    end
-    for neighbor in tvn
-        if code[neighbor] == AA_Term
-            N += k
-        elseif code[neighbor] == aa
-            S += k
-        else
-            N += k
+    for (pos, msk) in enumerate(CDN_POS_MASKS)
+        bidx = bitindex(codon, pos)
+        @inbounds for base in 0:3
+            # Create the neighbor codon.
+            neighbor = C((cdn_bits & msk) | (base << bidx))
+            if codon == neighbor # Codon created is not a neighbor: should happen 3 times.
+                continue
+            end
+            # See if the mutation is transition or transversion.
+            cdn_purine = ispurine(codon[pos])
+            neighbor_purine = ispurine(neighbor[pos])
+            istransition = (cdn_purine && neighbor_purine) || (!cdn_purine && !neighbor_purine)
+            # See if the protein changes between codon and neighbor, and update
+            # N and S counts accordingly.
+            inc = ifelse(istransition, 1.0, k)
+            neighbor_aa = code[neighbor]
+            if neighbor_aa == AA_Term
+                N += inc
+            elseif neighbor_aa == aa
+                S += inc
+            else
+                N += inc
+            end
         end
     end
     normalization = (N + S) / 3
     return (S / normalization), (N / normalization)
 end
+
+@inline bitindex(x::Kmer{T,K}, i::Integer) where {T,K} = 2 * (K - i)
 
 function expected_NG86(codons, k::Float64 = 1.0, code::GeneticCode = DEFAULT_TRANS)
     return _expected_NG86(codons, k, code, eltype(codons))
