@@ -9,6 +9,7 @@
 const CDN = Union{BioSequences.DNACodon, BioSequences.RNACodon}
 const DEFAULT_TRANS = BioSequences.ncbi_trans_table[1]
 const CDN_POS_MASKS = (0xFFFFFFFFFFFFFFCF, 0xFFFFFFFFFFFFFFF3, 0xFFFFFFFFFFFFFFFC)
+const SITE_PERMUTATIONS = [[1, 2, 3], [1, 3, 2], [2, 1, 3], [2, 3, 1], [3, 1, 2], [3, 2, 1]]
 #=
 struct AlignedCodons{T<:NucAlphs}
     x::BioSequence{T}
