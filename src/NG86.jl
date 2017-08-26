@@ -81,11 +81,11 @@ function _NG86_2(x, y, k::Float64, code::GeneticCode, addone::Bool, xtype::Type{
     DN = 0.0
     # Iterate over every pair of codons.
     @inbounds for (i, j) in zip(x, y)
-        si, ni = expected_NG86(i, k, code)
-        sj, nj = expected_NG86(j, k, code)
+        si, ni = S_N_NG86(i, k, code)
+        sj, nj = S_N_NG86(j, k, code)
         S += (si + sj)
         N += (ni + nj)
-        DSi, DNi = observed_NG86(i, j, code)
+        DSi, DNi = DS_DN_NG86(i, j, code)
         DS += DSi
         DN += DNi
     end
