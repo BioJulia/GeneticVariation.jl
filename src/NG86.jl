@@ -6,6 +6,26 @@
 # This file is a part of BioJulia.
 # License is MIT: https://github.com/BioJulia/GeneticVariation.jl/blob/master/LICENSE.md
 
+immutable NG86
+    N::Float64
+    S::Float64
+    DN::Float64
+    DS::Float64
+    pN::Float64
+    pS::Float64
+    dN::Float64
+    dS::Float64
+end
+
+N(x::NG86) = x.N
+S(x::NG86) = x.S
+SN(x::NG86) = x.DN
+DS(x::NG86) = x.DS
+pN(x::NG86) = x.pN
+pS(x::NG86) = x.pS
+dN(x::NG86) = x.dN
+dS(x::NG86) = x.dS
+
 """
     dNdS_NG86(x, y, k::Float64 = 1.0, code::GeneticCode)
 
@@ -16,7 +36,7 @@ This function requires two iterables `x` and `y`, which yield `DNACodon` or
 package.
 """
 function dNdS_NG86(x, y, k::Float64 = 1.0, code::GeneticCode = DEFAULT_TRANS, addone::Bool = false)
-    return _dNdS_NG86(x, y, k, code, addone, eltype(x), eltype(y))
+    return _NG86(x, y, k, code, addone, eltype(x), eltype(y))
 end
 
 """
@@ -69,10 +89,6 @@ function _dNdS_NG86(x, y, k::Float64, code::GeneticCode, addone::Bool, xtype::Ty
     end
     pN = DN / N
     pS = DS / S
-    println("S: ", S)
-    println("N: ", N)
-    println("DS: ", DS)
-    println("DN: ", DN)
     dN = d_(pN)
     dS = d_(pS)
     return dN, dS
@@ -98,10 +114,6 @@ function _dNdS_NG86_2(x, y, k::Float64, code::GeneticCode, addone::Bool, xtype::
     N = N / 2.0
     pN = DN / N
     pS = DS / S
-    println("S: ", S)
-    println("N: ", N)
-    println("DS: ", DS)
-    println("DN: ", DN)
     dN = d_(pN)
     dS = d_(pS)
     return dN, dS
