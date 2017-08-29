@@ -55,15 +55,15 @@ end
 
 function _dNdS_NG86(x, y, k::Float64, code::GeneticCode, addone::Bool, xtype::Type{C}, ytype::Type{C}) where C <: CDN
     # Compute S and N: The expected number of synonymous and nonsynonymous sites.
-    S_x, N_x = expected_NG86(x, k, code)
-    S_y, N_y = expected_NG86(y, k, code)
+    S_x, N_x = S_N_NG86(x, k, code)
+    S_y, N_y = S_N_NG86(y, k, code)
     S = (S_x + S_y) / 2.0
     N = (N_x + N_y) / 2.0
     # Compute DS and DN: The observed number of synonymous and nonsynonymous mutations.
     DS = ifelse(addone, 1.0, 0.0)
     DN = 0.0
     @inbounds for (i, j) in zip(x, y)
-        DS_i, DN_i = observed_NG86(i, j, code)
+        DS_i, DN_i = DS_DN_NG86(i, j, code)
         DS += DS_i
         DN += DN_i
     end
@@ -102,7 +102,7 @@ end
 Enumerate the number of synonymous (S) and non-synonymous (N) sites in a codon,
 using the method used by the Nei and Goborjei (1986).
 
-Returns a tuple where S is the first element and N is the second (S, N). 
+Returns a tuple where S is the first element and N is the second (S, N).
 
 Each site in a codon may be both partially synonymous and non-synonymous.
 """
