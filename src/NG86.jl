@@ -16,7 +16,7 @@ This function requires two iterables `x` and `y`, which yield `DNACodon` or
 package.
 """
 function dNdS_NG86(x, y, k::Float64 = 1.0, code::GeneticCode = DEFAULT_TRANS, addone::Bool = false)
-    _NG86(x, y, k, code, addone, eltype(x), eltype(y))
+    return _dNdS_NG86(x, y, k, code, addone, eltype(x), eltype(y))
 end
 
 """
