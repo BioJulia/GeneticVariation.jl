@@ -25,7 +25,7 @@ export
     pdistance,
     mash,
     jaccard,
-    NG86,
+    dNdS_NG86,
 
     # Allele frequencies
     gene_frequencies,

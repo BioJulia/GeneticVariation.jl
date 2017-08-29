@@ -6,43 +6,23 @@
 # This file is a part of BioJulia.
 # License is MIT: https://github.com/BioJulia/GeneticVariation.jl/blob/master/LICENSE.md
 
-immutable NG86
-    N::Float64
-    S::Float64
-    DN::Float64
-    DS::Float64
-    pN::Float64
-    pS::Float64
-    dN::Float64
-    dS::Float64
-end
-
-N(x::NG86) = x.N
-S(x::NG86) = x.S
-SN(x::NG86) = x.DN
-DS(x::NG86) = x.DS
-pN(x::NG86) = x.pN
-pS(x::NG86) = x.pS
-dN(x::NG86) = x.dN
-dS(x::NG86) = x.dS
-
 """
     dNdS_NG86(x, y, k::Float64 = 1.0, code::GeneticCode)
 
-Compute dNdS statistics, using the Nei and Goborjei 1986 method.
+Compute dN and dS, using the Nei and Goborjei 1986 method.
 
 This function requires two iterables `x` and `y`, which yield `DNACodon` or
 `RNACodon` type variables. These two types are defined in the BioSequences
 package.
 """
 function dNdS_NG86(x, y, k::Float64 = 1.0, code::GeneticCode = DEFAULT_TRANS, addone::Bool = false)
-    return _NG86(x, y, k, code, addone, eltype(x), eltype(y))
+    return _dNdS_NG86(x, y, k, code, addone, eltype(x), eltype(y))
 end
 
 """
-    dNdS_NG86(x::BioSequence{A}, y::BioSequence{A}, k::Float64, code::GeneticCode) where {A <: NucAlphs}
+    NG86(x::BioSequence{A}, y::BioSequence{A}, k::Float64, code::GeneticCode) where {A <: NucAlphs}
 
-Compute dNdS statistics, using the Nei and Goborjei 1986 method.
+Compute dN and dS, using the Nei and Goborjei 1986 method.
 
 This method adds conveinience when working with DNA or RNA sequences, by taking
 two sequences, and creating two vectors of aligned codons from them. These two
@@ -50,51 +30,10 @@ iterables are then passed into the generic NG86 method.
 """
 function dNdS_NG86(x::BioSequence{A}, y::BioSequence{A}, opt...) where {A <: NucAlphs}
     xcdns, ycdns = aligned_codons(x, y)
-    return NG86(xcdns, ycdns, opt...)
-end
-
-"""
-    pairwise_do
-"""
-function pairwise_do(f::Function, x::Vector{B}, dest::Matrix, opt...) where B <: BioSequence
-    n = length(x)
-    @assert size(dest) == (n, n) "The size of the dest matrix is not appropriate."
-    if n >= 2
-        results = Matrix{Tuple{Float64, Float64}}(n, n)
-        for i in 1:n
-            results[i,i] = 0.0, 0.0
-            for j in (i + 1):n
-                results[i,j] = results[j,i] = NG86(x[i], x[j], k, code)
-            end
-        end
-        return results
-    else
-        error("At least two sequences are required.")
-    end
+    return dNdS_NG86(xcdns, ycdns, opt...)
 end
 
 function _dNdS_NG86(x, y, k::Float64, code::GeneticCode, addone::Bool, xtype::Type{C}, ytype::Type{C}) where C <: CDN
-    # Compute S and N: The expected number of synonymous and nonsynonymous sites.
-    S_x, N_x = S_N_NG86(x, k, code)
-    S_y, N_y = S_N_NG86(y, k, code)
-    S = (S_x + S_y) / 2.0
-    N = (N_x + N_y) / 2.0
-    # Compute DS and DN: The observed number of synonymous and nonsynonymous mutations.
-    DS = ifelse(addone, 1.0, 0.0)
-    DN = 0.0
-    @inbounds for (i, j) in zip(x, y)
-        DS_i, DN_i = DS_DN_NG86(i, j, code)
-        DS += DS_i
-        DN += DN_i
-    end
-    pN = DN / N
-    pS = DS / S
-    dN = d_(pN)
-    dS = d_(pS)
-    return dN, dS
-end
-
-function _dNdS_NG86_2(x, y, k::Float64, code::GeneticCode, addone::Bool, xtype::Type{C}, ytype::Type{C}) where C <: CDN
     # Expected no. of syn and nonsyn sites.
     S = N = 0.0
     # Observed no. of syn and nonsyn mutations.
@@ -163,24 +102,6 @@ function S_N_NG86(codon::C, k::Float64, code::GeneticCode) where {C <: CDN}
 end
 
 @inline bitindex(x::Kmer{T,K}, i::Integer) where {T,K} = 2 * (K - i)
-
-function S_N_NG86(codons, k::Float64 = 1.0, code::GeneticCode = DEFAULT_TRANS)
-    return _S_N_NG86(codons, k, code, eltype(codons))
-end
-
-function _S_N_NG86(codons, k::Float64, code::GeneticCode, etype)
-    return error("Iterable not supported.")
-end
-
-function _S_N_NG86(codons, k::Float64, code::GeneticCode, etype::Type{C}) where C <: CDN
-    S = N = 0.0
-    @inbounds for codon in codons
-        S_i, N_i = S_N_NG86(codon, k, code)
-        S += S_i
-        N += N_i
-    end
-    return S, N
-end
 
 @inline function classify_mutation(x::C, y::C, code::GeneticCode, weight::Float64 = 1.0) where C <: CDN
     if code[x] == code[y]

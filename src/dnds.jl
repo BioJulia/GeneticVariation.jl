@@ -52,7 +52,7 @@ function aligned_codons(x::BioSequence{T}, y::BioSequence{T}, start::Int = 1) wh
     return xcdns, ycdns
 end
 
-function pairwise_do!(f::Function, x::Vector{B}, dest::Matrix, opt...) where B<:BioSequence
+function pairwise_do!(f::Function, x::Vector{B}, dest::Matrix, opt...) where B <: BioSequence
     n = length(x)
     @assert size(dest) == (n, n) "The size of the dest matrix is not appropriate."
     @assert l >= 2 "Not enough sequences."
@@ -63,6 +63,26 @@ function pairwise_do!(f::Function, x::Vector{B}, dest::Matrix, opt...) where B<:
         end
     end
     return dest
+end
+
+"""
+    pairwise_do
+"""
+function pairwise_do(f::Function, x::Vector{B}, dest::Matrix, opt...) where B <: BioSequence
+    n = length(x)
+    @assert size(dest) == (n, n) "The size of the dest matrix is not appropriate."
+    if n >= 2
+        results = Matrix{Tuple{Float64, Float64}}(n, n)
+        for i in 1:n
+            results[i,i] = 0.0, 0.0
+            for j in (i + 1):n
+                results[i,j] = results[j,i] = NG86(x[i], x[j], k, code)
+            end
+        end
+        return results
+    else
+        error("At least two sequences are required.")
+    end
 end
 
 include("NG86.jl")
