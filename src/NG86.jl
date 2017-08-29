@@ -67,6 +67,10 @@ function _dNdS_NG86(x, y, k::Float64, code::GeneticCode, addone::Bool, xtype::Ty
         DS += DS_i
         DN += DN_i
     end
+    println("S: ", S)
+    println("N: ", N)
+    println("DS: ", DS)
+    println("DN: ", DN)
     # P_s and P_n: The proportion of and synonymous and nonsynonymous differences
     dN = d_(DN / N)
     dS = d_(DS / S)
@@ -91,6 +95,10 @@ function _dNdS_NG86_2(x, y, k::Float64, code::GeneticCode, addone::Bool, xtype::
     end
     S = S / 2.0
     N = N / 2.0
+    println("S: ", S)
+    println("N: ", N)
+    println("DS: ", DS)
+    println("DN: ", DN)
     dN = d_(DN / N)
     dS = d_(DS / S)
     return dN, dS
