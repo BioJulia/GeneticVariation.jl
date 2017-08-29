@@ -55,6 +55,14 @@ function _dNdS_NG86(x, y, k::Float64, code::GeneticCode, addone::Bool, xtype::Ty
     pS = DS / S
     dN = d_(pN)
     dS = d_(pS)
+    println("N: ", N)
+    println("S: ", S)
+    println("DN: ", DN)
+    println("DS: ", DS)
+    println("pN: ", pN)
+    println("pS: ", pS)
+    println("dN: ", dN)
+    println("dS: ", dS)
     return dN, dS
 end
 
