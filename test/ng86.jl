@@ -44,9 +44,7 @@
     end
 
     @testset "dNdS" begin
-        @test dNdS_NG86(codonsA, codonsB)[1] ≈ 0.1505 atol=0.001
-        @test dNdS_NG86(codonsA, codonsB)[2] ≈ 1.2074 atol=0.001
-        #_dNdS_NG86(codonsA, codonsB, 1.0, ncbi_trans_table[1], false, DNACodon, DNACodon)[1] ≈ 0.1505 atol=0.001
-        #_dNdS_NG86(codonsA, codonsB, 1.0, ncbi_trans_table[1], false, DNACodon, DNACodon)[2] ≈ 1.2074 atol=0.001
+        @test dNdS_NG86(codonsA, codonsB)[1] ≈ 0.125 atol=0.001
+        @test dNdS_NG86(codonsA, codonsB)[2] ≈ 0.974 atol=0.001
     end
 end

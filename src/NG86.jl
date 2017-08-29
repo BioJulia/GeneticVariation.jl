@@ -20,7 +20,7 @@ function dNdS_NG86(x, y, k::Float64 = 1.0, code::GeneticCode = DEFAULT_TRANS, ad
 end
 
 """
-    NG86(x::BioSequence{A}, y::BioSequence{A}, k::Float64, code::GeneticCode) where {A <: NucAlphs}
+    dNdS_NG86(x::BioSequence{A}, y::BioSequence{A}, k::Float64, code::GeneticCode) where {A <: NucAlphs}
 
 Compute dN and dS, using the Nei and Goborjei 1986 method.
 
@@ -55,14 +55,6 @@ function _dNdS_NG86(x, y, k::Float64, code::GeneticCode, addone::Bool, xtype::Ty
     pS = DS / S
     dN = d_(pN)
     dS = d_(pS)
-    println("N: ", N)
-    println("S: ", S)
-    println("DN: ", DN)
-    println("DS: ", DS)
-    println("pN: ", pN)
-    println("pS: ", pS)
-    println("dN: ", dN)
-    println("dS: ", dS)
     return dN, dS
 end
 
