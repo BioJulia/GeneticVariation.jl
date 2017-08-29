@@ -67,13 +67,14 @@ function _dNdS_NG86(x, y, k::Float64, code::GeneticCode, addone::Bool, xtype::Ty
         DS += DS_i
         DN += DN_i
     end
+    pN = DN / N
+    pS = DS / S
     println("S: ", S)
     println("N: ", N)
     println("DS: ", DS)
     println("DN: ", DN)
-    # P_s and P_n: The proportion of and synonymous and nonsynonymous differences
-    dN = d_(DN / N)
-    dS = d_(DS / S)
+    dN = d_(pN)
+    dS = d_(pS)
     return dN, dS
 end
 
@@ -95,12 +96,14 @@ function _dNdS_NG86_2(x, y, k::Float64, code::GeneticCode, addone::Bool, xtype::
     end
     S = S / 2.0
     N = N / 2.0
+    pN = DN / N
+    pS = DS / S
     println("S: ", S)
     println("N: ", N)
     println("DS: ", DS)
     println("DN: ", DN)
-    dN = d_(DN / N)
-    dS = d_(DS / S)
+    dN = d_(pN)
+    dS = d_(pS)
     return dN, dS
 end
 
@@ -108,7 +111,7 @@ end
     S_N_NG86(codon::C, k::Float64, code::GeneticCode) where {C <: CDN}
 
 Enumerate the number of synonymous (S) and non-synonymous (N) sites in a codon,
-using the method used by the Nei and Goborjei (1986).
+using the method used by Nei and Goborjei (1986).
 
 Returns a tuple where S is the first element and N is the second (S, N).
 
