@@ -142,7 +142,7 @@ end
 @inline bitindex(x::Kmer{T,K}, i::Integer) where {T,K} = 2 * (K - i)
 
 function S_N_NG86(codons, k::Float64 = 1.0, code::GeneticCode = DEFAULT_TRANS)
-    return _expected_NG86(codons, k, code, eltype(codons))
+    return _S_N_NG86(codons, k, code, eltype(codons))
 end
 
 function _S_N_NG86(codons, k::Float64, code::GeneticCode, etype)
