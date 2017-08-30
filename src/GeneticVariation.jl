@@ -79,7 +79,6 @@ include("bcf/bcf.jl")
 include("site_counting.jl")
 include("distances/minhash.jl")
 include("distances/proportion.jl")
-include("dnds.jl")
 include("allele_freq.jl")
 include("nuc_div.jl")
 
