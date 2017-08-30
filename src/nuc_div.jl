@@ -47,7 +47,7 @@ end
 """
     NL79(sequences)
 
-Compute nucleotide diversity, as first described by Nei and Li in 1979.
+Compute nucleotide diversity, as described by Nei and Li in 1979.
 
 This measure is defined as the average number of nucleotide differences per site
 between two DNA sequences in all possible pairs in the sample population, and is
