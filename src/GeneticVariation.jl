@@ -25,7 +25,12 @@ export
     pdistance,
     mash,
     jaccard,
-    NG86,
+
+    # Allele frequencies
+    gene_frequencies,
+
+    # Nucleotide diversity
+    NL79,
 
     # VCF and BCF
     VCF,
@@ -40,21 +45,23 @@ importall BioCore
 import BioSequences:
     BioSequences,
     Alphabet,
-    DNAAlphabet,
-    RNAAlphabet,
-    Sequence,
+    AA_Term,
     BioSequence,
-    MinHashSketch,
-    Certain,
-    Mismatch,
-    Match,
-    Position,
     bp_chunk_count,
+    Certain,
+    Composition,
+    DNAAlphabet,
     GeneticCode,
     ispurine,
-    AA_Term,
+    Kmer,
+    Match,
+    Mismatch,
+    MinHashSketch,
     NucAlphs,
-    Kmer
+    Position,
+    RNAAlphabet,
+    Sequence
+
 import Compat: @compat
 import Combinatorics.permutations
 import IntervalTrees: Interval, IntervalValue
@@ -72,6 +79,7 @@ include("bcf/bcf.jl")
 include("site_counting.jl")
 include("distances/minhash.jl")
 include("distances/proportion.jl")
-include("dnds.jl")
+include("allele_freq.jl")
+include("nuc_div.jl")
 
 end # Module GeneticVariation
