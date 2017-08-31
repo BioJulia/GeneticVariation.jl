@@ -7,7 +7,7 @@ end
 
 # VCF and BCF Formatted files
 
-VCF is a text-based file format for representing genetic variations.
+VCF is a text-based file format for representing genetic polymorphism.
 
 VCF files can be read using `VCFReader`, respectively:
 
