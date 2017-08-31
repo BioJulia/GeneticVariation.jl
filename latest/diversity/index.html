@@ -10,7 +10,7 @@
         <meta name="description" content="Datastructures and algorithms for working with genetic variation.">
       
       
-        <link rel="canonical" href="https://biojulia.github.io/GeneticVariation.jl/contributing/">
+        <link rel="canonical" href="https://biojulia.github.io/GeneticVariation.jl/diversity/">
       
       
         <meta name="author" content="The BioJulia Organisation">
@@ -22,7 +22,7 @@
     
     
       
-        <title>Contributing - GeneticVariation.jl</title>
+        <title>Genetic Diversity - GeneticVariation.jl</title>
       
     
     
@@ -83,7 +83,7 @@
             
               
             
-            Contributing
+            Genetic Diversity
           
         </span>
       </div>
@@ -248,18 +248,6 @@
       
       
 
-
-  <li class="md-nav__item">
-    <a href="../diversity/" title="Genetic Diversity" class="md-nav__link">
-      Genetic Diversity
-    </a>
-  </li>
-
-    
-      
-      
-      
-
   
 
 
@@ -270,44 +258,22 @@
       
     
     
-      <label class="md-nav__link md-nav__link--active" for="toc">
-        Contributing
-      </label>
-    
-    <a href="./" title="Contributing" class="md-nav__link md-nav__link--active">
-      Contributing
+    <a href="./" title="Genetic Diversity" class="md-nav__link md-nav__link--active">
+      Genetic Diversity
     </a>
     
-      
-<nav class="md-nav md-nav--secondary">
-  
-  
+  </li>
+
     
-  
-  
-    <label class="md-nav__title" for="toc">Table of contents</label>
-    <ul class="md-nav__list" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#named-maintainers" title="Named maintainers" class="md-nav__link">
-    Named maintainers
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#branching-model" title="Branching model" class="md-nav__link">
-    Branching model
-  </a>
-  
-</li>
       
       
       
-    </ul>
-  
-</nav>
-    
+
+
+  <li class="md-nav__item">
+    <a href="../contributing/" title="Contributing" class="md-nav__link">
+      Contributing
+    </a>
   </li>
 
     
@@ -328,27 +294,6 @@
     
   
   
-    <label class="md-nav__title" for="toc">Table of contents</label>
-    <ul class="md-nav__list" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#named-maintainers" title="Named maintainers" class="md-nav__link">
-    Named maintainers
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#branching-model" title="Branching model" class="md-nav__link">
-    Branching model
-  </a>
-  
-</li>
-      
-      
-      
-    </ul>
-  
 </nav>
                   </div>
                 </div>
@@ -359,21 +304,82 @@
             <article class="md-content__inner md-typeset">
               
                 
-                  <a href="https://github.com/BioJulia/GeneticVariation.jl/edit/master/docs/contributing.md" title="Edit this page" class="md-icon md-content__icon">&#xE3C9;</a>
+                  <a href="https://github.com/BioJulia/GeneticVariation.jl/edit/master/docs/diversity.md" title="Edit this page" class="md-icon md-content__icon">&#xE3C9;</a>
                 
                 
-                <p><a id='Contributing-1'></a></p>
-<h1 id="contributing">Contributing</h1>
-<p>We appreciate contributions from users including reporting bugs, fixing issues, improving performance and adding new features.</p>
-<p>If you have a question about contributing or using this package, you are encouraged to use the <a href="https://discourse.julialang.org/c/domain/bio">Bio category of the Julia discourse site</a>.</p>
-<p>Detailed guidance for contributing to all BioJulia packages is provided at the <a href="https://biojulia.github.io/Contributing/latest">BioJulia Contribution Documentation</a>.</p>
-<p>Here we list specific details about contributing and maintainership pertaining specifically to the GeneticVariation.jl package.</p>
-<p><a id='Named-maintainers-1'></a></p>
-<h2 id="named-maintainers">Named maintainers</h2>
-<p>The named maintainers of this package are Kenta Sato and Ben Ward. It is their responsibility to make final choices about pull requests and issues, although because of our community structure, you will find other maintainers assisting them.</p>
-<p><a id='Branching-model-1'></a></p>
-<h2 id="branching-model">Branching model</h2>
-<p>The branching model used to develop and make releases of this package is the <a href="http://endoflineblog.com/oneflow-a-git-branching-model-and-workflow">OneFlow</a> model summarized in the <a href="http://biojulia.github.io/Contributing/latest/help/branching_guide/">BioJulia Contribution Documentation</a></p>
+                <p><a id='Computing-allele-frequencies-1'></a></p>
+<h1 id="computing-allele-frequencies">Computing allele frequencies</h1>
+<p>When first looking at the diversity present in a population, it is common to want to know how many of each unique allele there is in a population i.e. the allele frequencies of the population are.</p>
+<p>Formally defined, allele frequency is a measure of the relative frequency of an allele on a genetic locus in a population.</p>
+<p>In population genetics, allele frequencies show the genetic diversity of a species population or equivalently the richness of its gene pool.</p>
+<p>Population genetics studies the different "forces" that might lead to changes in the distribution and frequencies of alleles - in other words, to evolution.</p>
+<p>Besides selection, these forces include genetic drift, mutation and migration.</p>
+<p>Computing allele frequencies then, is an essential task for many wishing to work with genetic variation, and so methods for computing such frequencies are included in GeneticVariation.jl.</p>
+<p>Allele frequencies can be computed for genes, micro-satellites, RFPL patterns, and from SNPs.</p>
+<p><a id='GeneticVariation.gene_frequencies' href='#GeneticVariation.gene_frequencies'>#</a>
+<strong><code>GeneticVariation.gene_frequencies</code></strong> &mdash; <em>Function</em>.</p>
+<div class="codehilite"><pre><span></span>gene_frequencies(seqcounts::Composition{T}) where T &lt;: Sequence
+</pre></div>
+
+
+<p>Compute gene_frequencies from a <code>BioSequences.Composition</code> variable that contains unique sequence counts.</p>
+<p><a target='_blank' href='https://github.com/BioJulia/GeneticVariation.jl/tree/5b9b0ac8df5a742a4bb4b3a258e8f3b65796296d/src/allele_freq.jl#L9-L14' class='documenter-source'>source</a><br></p>
+<div class="codehilite"><pre><span></span>gene_frequencies(iterable)
+</pre></div>
+
+
+<p>Compute the gene frequencies for any iterable with an <code>eltype</code> which is a concrete subtype of the abstract <code>Sequence</code> type.</p>
+<p><a target='_blank' href='https://github.com/BioJulia/GeneticVariation.jl/tree/5b9b0ac8df5a742a4bb4b3a258e8f3b65796296d/src/allele_freq.jl#L24-L29' class='documenter-source'>source</a><br></p>
+<p><a id='Computing-measures-of-genetic-diversity-1'></a></p>
+<h1 id="computing-measures-of-genetic-diversity">Computing measures of genetic diversity</h1>
+<p><a id='Nucleotide-diversity-1'></a></p>
+<h2 id="nucleotide-diversity">Nucleotide diversity</h2>
+<p>Nucleotide diversity is a concept in molecular genetics which is used to measure the degree of polymorphism within a population.</p>
+<p>There are different methods which can be used to compute measures of nucleotide diversity, we list them below, and show how to compute them using GeneticVariation. </p>
+<p><a id='GeneticVariation.NL79' href='#GeneticVariation.NL79'>#</a>
+<strong><code>GeneticVariation.NL79</code></strong> &mdash; <em>Function</em>.</p>
+<div class="codehilite"><pre><span></span>NL79(m::M, f::V) where {M&lt;:AbstractMatrix{Float64},V&lt;:AbstractVector{Float64}}
+</pre></div>
+
+
+<p>Compute nucleotide diversity using a matrix of the number of mutations between sequence pairs, and a vector of the frequencies of each sequence in the population.</p>
+<p><a target='_blank' href='https://github.com/BioJulia/GeneticVariation.jl/tree/5b9b0ac8df5a742a4bb4b3a258e8f3b65796296d/src/nuc_div.jl#L32-L38' class='documenter-source'>source</a><br></p>
+<div class="codehilite"><pre><span></span>NL79(sequences)
+</pre></div>
+
+
+<p>Compute nucleotide diversity, as described by Nei and Li in 1979.</p>
+<p>This measure is defined as the average number of nucleotide differences per site between two DNA sequences in all possible pairs in the sample population, and is often denoted by the greek letter pi.</p>
+<p><code>Sequences</code> should be any iterable that yields biosequence types.</p>
+<p><strong>Examples</strong></p>
+<div class="codehilite"><pre><span></span>julia&gt; testSeqs = [dna&quot;AAAACTTTTACCCCCGGGGG&quot;,
+                   dna&quot;AAAACTTTTACCCCCGGGGG&quot;,
+                   dna&quot;AAAACTTTTACCCCCGGGGG&quot;,
+                   dna&quot;AAAACTTTTACCCCCGGGGG&quot;,
+                   dna&quot;AAAAATTTTACCCCCGTGGG&quot;,
+                   dna&quot;AAAAATTTTACCCCCGTGGG&quot;,
+                   dna&quot;AAAACTTTTTCCCCCGTAGG&quot;,
+                   dna&quot;AAAACTTTTTCCCCCGTAGG&quot;,
+                   dna&quot;AAAAATTTTTCCCCCGGAGG&quot;,
+                   dna&quot;AAAAATTTTTCCCCCGGAGG&quot;]
+10-element Array{BioSequences.BioSequence{BioSequences.DNAAlphabet{4}},1}:
+ AAAACTTTTACCCCCGGGGG
+ AAAACTTTTACCCCCGGGGG
+ AAAACTTTTACCCCCGGGGG
+ AAAACTTTTACCCCCGGGGG
+ AAAAATTTTACCCCCGTGGG
+ AAAAATTTTACCCCCGTGGG
+ AAAACTTTTTCCCCCGTAGG
+ AAAACTTTTTCCCCCGTAGG
+ AAAAATTTTTCCCCCGGAGG
+ AAAAATTTTTCCCCCGGAGG
+
+ julia&gt; NL79(testSeqs)
+ 0.096
+</pre></div>
+
+
+<p><a target='_blank' href='https://github.com/BioJulia/GeneticVariation.jl/tree/5b9b0ac8df5a742a4bb4b3a258e8f3b65796296d/src/nuc_div.jl#L47-L87' class='documenter-source'>source</a><br></p>
                 
                   
                 
@@ -392,7 +398,7 @@
     <div class="md-footer-nav">
       <nav class="md-footer-nav__inner md-grid">
         
-          <a href="../diversity/" title="Genetic Diversity" class="md-flex md-footer-nav__link md-footer-nav__link--prev" rel="prev">
+          <a href="../site_counting/" title="Mutation Counting" class="md-flex md-footer-nav__link md-footer-nav__link--prev" rel="prev">
             <div class="md-flex__cell md-flex__cell--shrink">
               <i class="md-icon md-icon--arrow-back md-footer-nav__button"></i>
             </div>
@@ -401,11 +407,25 @@
                 <span class="md-footer-nav__direction">
                   Previous
                 </span>
-                Genetic Diversity
+                Mutation Counting
               </span>
             </div>
           </a>
         
+        
+          <a href="../contributing/" title="Contributing" class="md-flex md-footer-nav__link md-footer-nav__link--next" rel="next">
+            <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
+              <span class="md-flex__ellipsis">
+                <span class="md-footer-nav__direction">
+                  Next
+                </span>
+                Contributing
+              </span>
+            </div>
+            <div class="md-flex__cell md-flex__cell--shrink">
+              <i class="md-icon md-icon--arrow-forward md-footer-nav__button"></i>
+            </div>
+          </a>
         
       </nav>
     </div>
