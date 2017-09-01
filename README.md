@@ -1,7 +1,6 @@
 # GeneticVariation.jl
 
 [![Latest Release](https://img.shields.io/github/release/BioJulia/GeneticVariation.jl.svg)](https://github.com/BioJulia/GeneticVariation.jl/releases/latest)
-[![GeneticVariation](http://pkg.julialang.org/badges/GeneticVariation_0.5.svg)](http://pkg.julialang.org/?pkg=GeneticVariation)
 [![GeneticVariation](http://pkg.julialang.org/badges/GeneticVariation_0.6.svg)](http://pkg.julialang.org/?pkg=GeneticVariation)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](https://github.com/BioJulia/GeneticVariation.jl/blob/master/LICENSE)
 [![](https://img.shields.io/badge/docs-stable-blue.svg)](https://biojulia.github.io/GeneticVariation.jl/stable)
