@@ -9,11 +9,11 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "index.html#GeneticVariation.jl-smallBiological-Variation/small-1",
+    "location": "index.html#GeneticVariation.jl-1",
     "page": "Home",
-    "title": "GeneticVariation.jl <small>Biological Variation</small>",
+    "title": "GeneticVariation.jl",
     "category": "section",
-    "text": "(Image: Latest Release) (Image: GeneticVariation) (Image: GeneticVariation) (Image: License) (Image: ) (Image: ) (Image: BioJulia maintainer: bicycle1885) (Image: BioJulia maintainer: Ward9250)Development builds: (Image: Build Status) (Image: Build status) (Image: codecov)"
+    "text": "(Image: Latest Release) (Image: GeneticVariation) (Image: GeneticVariation) (Image: License) (Image: BioJulia maintainer: bicycle1885) (Image: BioJulia maintainer: Ward9250)Development builds: (Image: Build Status) (Image: Build status) (Image: codecov)"
 },
 
 {
