@@ -14,7 +14,7 @@ mutations.
 """
 struct Segregating <: Position end
 
-function count(::Type{Segregating}, seqs::Vector{T}) where T <: Sequence
+function Base.count(::Type{Segregating}, seqs::Vector{T}) where T <: Sequence
     cont = true
     i = 0
     count = 0
