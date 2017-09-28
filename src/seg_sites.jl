@@ -7,13 +7,14 @@
 # License is MIT: https://github.com/BioJulia/GeneticVariation.jl/blob/master/LICENSE.md
 
 """
-    nsegregating(seqs::Vector{T}) where T <: Sequence
-
-Compute the number of segregating sites in a vector of sequences.
-The set of sequences are assumed to be aligned, starting with their first
-position.
+`Segregating` sites are positions which show differences (polymorphisms)
+between related genes in a sequence alignment (are not conserved).
+Segregating sites include conservative, semi-conservative and non-conservative
+mutations.
 """
-function nsegregating(seqs::Vector{T}) where T <: Sequence
+struct Segregating <: Position end
+
+function count(::Type{Segregating}, seqs::Vector{T}) where T <: Sequence
     cont = true
     i = 0
     count = 0
