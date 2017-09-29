@@ -81,11 +81,19 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "man/site_counting.html#GeneticVariation.Segregating",
+    "page": "Mutation Counting",
+    "title": "GeneticVariation.Segregating",
+    "category": "Type",
+    "text": "Segregating sites are positions which show differences (polymorphisms) between related genes in a sequence alignment (are not conserved). Segregating sites include conservative, semi-conservative and non-conservative mutations.\n\n\n\n"
+},
+
+{
     "location": "man/site_counting.html#Types-of-site-added-1",
     "page": "Mutation Counting",
     "title": "Types of site added",
     "category": "section",
-    "text": "Conserved\nMutatedSee the [site-counting](site-counting section of the BioSequences.jl documentation to see how to use the count and count_pairwise methods to count different types of site."
+    "text": "Conserved\nMutated\nSegregatingSee the [site-counting](site-counting section of the BioSequences.jl documentation to see how to use the count and count_pairwise methods to count different types of site."
 },
 
 {
