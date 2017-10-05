@@ -93,7 +93,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Mutation Counting",
     "title": "Types of site added",
     "category": "section",
-    "text": "Conserved\nMutated\nSegregatingSee the [site-counting](site-counting section of the BioSequences.jl documentation to see how to use the count and count_pairwise methods to count different types of site."
+    "text": "Conserved\nMutated\nSegregatingSee the site-counting section of the BioSequences.jl documentation to see how to use the count and count_pairwise methods to count different types of site."
 },
 
 {
