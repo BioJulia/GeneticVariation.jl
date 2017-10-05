@@ -18,6 +18,7 @@ as computation of evolutionary distances.
 ```@docs
 Conserved
 Mutated
+Segregating
 ```
 
 See the [site-counting]([site-counting](https://biojulia.github.io/BioSequences.jl/stable/sequences/bioseq/#site-counting)

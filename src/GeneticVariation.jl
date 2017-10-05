@@ -16,6 +16,7 @@ export
     Mutated,
     #Transition,
     #Transversion,
+    Segregating,
 
     # Distances
     Proportion,
@@ -77,6 +78,7 @@ import Twiddle:
 include("vcf/vcf.jl")
 include("bcf/bcf.jl")
 include("site_counting.jl")
+include("seg_sites.jl")
 include("distances/minhash.jl")
 include("distances/proportion.jl")
 include("allele_freq.jl")
