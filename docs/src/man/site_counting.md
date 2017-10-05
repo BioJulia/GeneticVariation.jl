@@ -21,6 +21,6 @@ Mutated
 Segregating
 ```
 
-See the [site-counting]([site-counting](https://biojulia.github.io/BioSequences.jl/stable/sequences/bioseq/#site-counting)
+See the [site-counting](https://biojulia.github.io/BioSequences.jl/stable/sequences/bioseq/#site-counting)
 section of the BioSequences.jl documentation to see how to use the `count` and
 `count_pairwise` methods to count different types of site.
