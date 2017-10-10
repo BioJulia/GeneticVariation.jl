@@ -35,13 +35,20 @@ gene_frequencies
 
 # Computing measures of genetic diversity
 
+There are various methods of quantifying the amount of genetic variation in
+biological data with GeneticVariation.jl:
+
+```@docs
+avg_mut
+```
+
 ## Nucleotide diversity
 
 Nucleotide diversity is a concept in molecular genetics which is used to measure
 the degree of polymorphism within a population.
 
 There are different methods which can be used to compute measures of nucleotide
-diversity, we list them below, and show how to compute them using GeneticVariation. 
+diversity, we list them below, and show how to compute them using GeneticVariation.
 
 ```@docs
 NL79
