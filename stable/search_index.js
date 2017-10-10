@@ -121,11 +121,19 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "man/diversity.html#GeneticVariation.avg_mut",
+    "page": "Genetic Diversity",
+    "title": "GeneticVariation.avg_mut",
+    "category": "Function",
+    "text": "avg_mut(sequences)\n\nThe average number of mutations found in (n choose 2) pairwise comparisons of sequences (i, j) in a sample of sequences.\n\nsequences should be any indexable container of DNA sequence types.\n\n\n\n"
+},
+
+{
     "location": "man/diversity.html#Computing-measures-of-genetic-diversity-1",
     "page": "Genetic Diversity",
     "title": "Computing measures of genetic diversity",
     "category": "section",
-    "text": ""
+    "text": "There are various methods of quantifying the amount of genetic variation in biological data with GeneticVariation.jl:avg_mut"
 },
 
 {
@@ -141,7 +149,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Genetic Diversity",
     "title": "Nucleotide diversity",
     "category": "section",
-    "text": "Nucleotide diversity is a concept in molecular genetics which is used to measure the degree of polymorphism within a population.There are different methods which can be used to compute measures of nucleotide diversity, we list them below, and show how to compute them using GeneticVariation. NL79"
+    "text": "Nucleotide diversity is a concept in molecular genetics which is used to measure the degree of polymorphism within a population.There are different methods which can be used to compute measures of nucleotide diversity, we list them below, and show how to compute them using GeneticVariation.NL79"
 },
 
 {
