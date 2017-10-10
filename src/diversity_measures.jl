@@ -1,7 +1,7 @@
-# nuc_div.jl
-# ==========
+# diversity_measures.jl
+# =====================
 #
-# Nucleotide diversity estimation using Nei and Li's 1979 method for sequences.
+# Compute measures of genetic diversity with BioJulia data types.
 #
 # This file is a part of BioJulia.
 # License is MIT: https://github.com/BioJulia/GeneticVariation.jl/blob/master/LICENSE.md
@@ -13,20 +13,6 @@ function pdist(d::Matrix{Tuple{Int,Int}})
         o[i] = d[i][1] / d[i][2]
     end
     return o
-end
-
-@inline function extract_dict!(dict::Dict{K,V}, keys::Vector{K}, values::Vector{V}) where {K,V}
-    @inbounds for (i, pair) in enumerate(dict)
-        keys[i] = pair[1]
-        values[i] = pair[2]
-    end
-end
-
-@inline function extract_dict(dict::Dict{K,V}) where {K,V}
-    keys = Vector{K}(length(dict))
-    values = Vector{V}(length(dict))
-    extract_dict!(dict, keys, values)
-    return keys, values
 end
 
 """
@@ -95,4 +81,27 @@ function NL79(sequences)
         mutations = pdist(BioSequences.count_pairwise(Mutated, unique_sequences...))
         return NL79(mutations, collect(values(frequencies)))
     end
+end
+
+"""
+    avg_mut(sequences)
+
+The average number of mutations found in (n choose 2) pairwise comparisons of
+sequences (i, j) in a sample of sequences.
+
+`sequences` should be any indexable container of DNA sequence types.
+"""
+function avg_mut(sequences)
+    s = length(sequences)
+    @assert s ≥ 2 "At least 2 sequences are required."
+    nmut = 0
+    n = 0
+    @inbounds for i in eachindex(sequences)
+        si = sequences[i]
+        for j in (i + 1):endof(sequences)
+            nmut += count(Mutated, si, sequences[j])[1]
+            n += 1
+        end
+    end
+    return nmut / div(s * (s - 1), 2)
 end
