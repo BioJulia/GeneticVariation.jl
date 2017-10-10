@@ -1,4 +1,4 @@
-@testset "Nucleotide Diversity" begin
+@testset "Diversity Measures" begin
 
     # A simple test to ensure the math works out.
     testP = [0.0 0.006 0.002 0.004;
@@ -29,4 +29,17 @@
              0.15 0.15 0.1 0.0;]
 
     @test NL79(testSeqs) ≈ NL79(testP, testQ)
+
+    testSeqs = [dna"ATAATAAAAAAATAATAAAAAAATAAAAAAAATAAAAAAAA",
+                dna"AAAAAAAATAAATAATAAAAAAATAAAAAAAAAAAAAAAAA",
+                dna"AAAATAAAAATATAATAAAAAAATATAAAAAAAAAAAAAAA",
+                dna"AAAAAAAAAAAATAATAAAAAAATAAATAAATAAAAAAAAA",
+                dna"AAAATAAAAAAAATATAAAAAAATAAAAAAAAAAAAAAAAA",
+                dna"AAAATAAAAAAAAAATAAAAAAAAAAAAAAAAAAATAAAAA",
+                dna"AAAAAATAAAAATAATAAAAAAATAAAAAAAAAAAAAAAAA",
+                dna"AAAAAAAAAAAAAAATAAAAAAATAAAAAAAAAAAAAAATA",
+                dna"AAAAAAAAAAAAAAAAAAAAAAATAAAAAAAAAAAAAAAAA",
+                dna"AAAAAAAAAAAAAAATAAAAAAATAATAAAAAAAAAAAAAA"]
+
+    @test avg_mut(testSeqs) ≈ 3.888889 
 end

@@ -30,7 +30,8 @@ export
     # Allele frequencies
     gene_frequencies,
 
-    # Nucleotide diversity
+    # Diversity measures
+    avg_mut,
     NL79,
 
     # VCF and BCF
@@ -82,6 +83,6 @@ include("seg_sites.jl")
 include("distances/minhash.jl")
 include("distances/proportion.jl")
 include("allele_freq.jl")
-include("nuc_div.jl")
+include("diversity_measures.jl")
 
 end # Module GeneticVariation
