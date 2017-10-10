@@ -41,5 +41,5 @@
                 dna"AAAAAAAAAAAAAAAAAAAAAAATAAAAAAAAAAAAAAAAA",
                 dna"AAAAAAAAAAAAAAATAAAAAAATAATAAAAAAAAAAAAAA"]
 
-    @test avg_mut(testSeqs) ≈ 3.888889 
+    @test avg_mut(testSeqs) ≈ 3.888888 atol=10e-5
 end
