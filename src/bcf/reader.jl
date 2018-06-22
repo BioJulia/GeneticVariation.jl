@@ -44,7 +44,7 @@ function Reader(input::IO)
     return Reader((major, minor), vcfreader.header, stream)
 end
 
-function Base.eltype{T}(::Type{Reader{T}})
+function Base.eltype(::Type{Reader{T}}) where T
     return Record
 end
 

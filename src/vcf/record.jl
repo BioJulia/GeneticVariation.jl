@@ -591,7 +591,7 @@ function genotype(record::Record, index::Integer, keys::AbstractVector{String}):
     return [genotype(record, index, key) for key in keys]
 end
 
-function genotype{T<:Integer}(record::Record, indexes::AbstractVector{T}, key::String)::Vector{String}
+function genotype(record::Record, indexes::AbstractVector{T}, key::String)::Vector{String} where T<:Integer
     checkfilled(record)
     k = findgenokey(record, key)
     if k == 0
@@ -600,7 +600,7 @@ function genotype{T<:Integer}(record::Record, indexes::AbstractVector{T}, key::S
     return [genotype_impl(record, i, k) for i in indexes]
 end
 
-function genotype{T<:Integer}(record::Record, indexes::AbstractVector{T}, keys::AbstractVector{String})::Vector{Vector{String}}
+function genotype(record::Record, indexes::AbstractVector{T}, keys::AbstractVector{String})::Vector{Vector{String}} where T<:Integer
     checkfilled(record)
     ks = Vector{Int}(length(keys))
     for i in 1:endof(keys)
