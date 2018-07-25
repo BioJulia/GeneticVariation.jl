@@ -45,7 +45,7 @@ var documenterSearchIndex = {"docs": [
     "page": "VCF and BCF formatted files",
     "title": "VCF and BCF Formatted files",
     "category": "section",
-    "text": "VCF is a text-based file format for representing genetic polymorphism.VCF files can be read using VCFReader, respectively:reader = VCF.Reader(open(\"example.vcf\", \"r\"))\nfor record in reader\n    # do something\nend\nclose(reader)A reader first reads the header section of a file and creates a VCF.Header object. The header function is provided to access the header object of a reader:julia> header(reader)\nGeneticVariation.VCF.Header:\n  metainfo tags: fileformat fileDate source reference contig phasing INFO FILTER FORMAT\n     sample IDs: NA00001 NA00002 NA00003\n\njulia> find(header(reader), \"FORMAT\")\n4-element Array{GeneticVariation.VCF.MetaInfo,1}:\n GeneticVariation.VCF.MetaInfo:\n    tag: FORMAT\n  value: ID=\"GT\" Number=\"1\" Type=\"String\" Description=\"Genotype\"          \n GeneticVariation.VCF.MetaInfo:\n    tag: FORMAT\n  value: ID=\"GQ\" Number=\"1\" Type=\"Integer\" Description=\"Genotype Quality\"\n GeneticVariation.VCF.MetaInfo:\n    tag: FORMAT\n  value: ID=\"DP\" Number=\"1\" Type=\"Integer\" Description=\"Read Depth\"       \n GeneticVariation.VCF.MetaInfo:\n    tag: FORMAT\n  value: ID=\"HQ\" Number=\"2\" Type=\"Integer\" Description=\"Haplotype Quality\"VCF.MetaInfo variables in the header support the following accessors:Accessor Description\nmetainfotag tag string\nmetainfoval value string\nkeys keys of fields between '<' and '>'\nvalues values of fields between '<' and '>'\n[<key>] value of a field with keyjulia> metainfo = VCF.MetaInfo(\"##FORMAT=<ID=GT,Number=1,Type=String,Description=\\\"Genotype\\\">\")\nGeneticVariation.VCF.MetaInfo:\n    tag: FORMAT\n  value: ID=\"GT\" Number=\"1\" Type=\"String\" Description=\"Genotype\"\n\njulia> metainfotag(metainfo)\n\"FORMAT\"\n\njulia> metainfoval(metainfo)\n\"<ID=GT,Number=1,Type=String,Description=\\\"Genotype\\\">\"\n\njulia> keys(metainfo)\n4-element Array{String,1}:\n \"ID\"         \n \"Number\"     \n \"Type\"       \n \"Description\"\n\njulia> metainfo[\"ID\"]\n\"GT\"\nVCF.Record and BCF.Record variables support the following accessor functions (see the docstring of each accessor for the details):Accessor Description\nchrom chromosome name\npos reference position\nid unique identifiers\nref reference bases\nalt alternate bases\nqual Phred-scaled quality score\nfilter filter status\ninfo additional information\ninfokeys keys of additional information\nformat genotype format\ngenotype genotype informationjulia> record = VCF.Record(\"20\\t14370\\trs6054257\\tG\\tA\\t29\\tPASS\\tNS=3;DP=14;AF=0.5;DB;H2\\tGT:GQ:DP:HQ\\t0|0:48:1:51,51\\t1|0:48:8:51,51\")\nGeneticVariation.VCF.Record:\n   chromosome: 20\n     position: 14370\n   identifier: rs6054257\n    reference: G\n    alternate: A\n      quality: 29.0\n       filter: PASS\n  information: NS=3 DP=14 AF=0.5 DB H2\n       format: GT GQ DP HQ\n     genotype: [1] 0|0 48 1 51,51 [2] 1|0 48 8 51,51\n\njulia> VCF.chrom(record)\n\"20\"\n\njulia> VCF.pos(record)\n14370\n\njulia> VCF.id(record)\n1-element Array{String,1}:\n \"rs6054257\"\n\njulia> VCF.ref(record)\n\"G\"\n\njulia> VCF.alt(record)\n1-element Array{String,1}:\n \"A\"\n\njulia> VCF.qual(record)\n29.0\n\njulia> VCF.filter(record)\n1-element Array{String,1}:\n \"PASS\"\n\njulia> VCF.info(record)\n5-element Array{Pair{String,String},1}:\n \"NS\"=>\"3\"  \n \"DP\"=>\"14\"\n \"AF\"=>\"0.5\"\n \"DB\"=>\"\"   \n \"H2\"=>\"\"   \n\njulia> VCF.format(record)\n4-element Array{String,1}:\n \"GT\"\n \"GQ\"\n \"DP\"\n \"HQ\"\n\njulia> VCF.genotype(record)\n2-element Array{Array{String,1},1}:\n String[\"0|0\",\"48\",\"1\",\"51,51\"]\n String[\"1|0\",\"48\",\"8\",\"51,51\"]\n\njulia> VCF.genotype(record, 1:2, \"GT\")\n2-element Array{String,1}:\n \"0|0\"\n \"1|0\"\n\njulia> VCF.genotype(record, 1:1, \"GT\")\n1-element Array{String,1}:\n \"0|0\"\n\njulia> VCF.genotype(record, 1:2, \"GT\")\n2-element Array{String,1}:\n \"0|0\"\n \"1|0\"\n"
+    "text": "VCF is a text-based file format for representing genetic polymorphism.VCF files can be read using VCFReader, respectively:reader = VCF.Reader(open(\"example.vcf\", \"r\"))\nfor record in reader\n    # do something\nend\nclose(reader)A reader first reads the header section of a file and creates a VCF.Header object. The header function is provided to access the header object of a reader:julia> header(reader)\nGeneticVariation.VCF.Header:\n  metainfo tags: fileformat fileDate source reference contig phasing INFO FILTER FORMAT\n     sample IDs: NA00001 NA00002 NA00003\n\njulia> find(header(reader), \"FORMAT\")\n4-element Array{GeneticVariation.VCF.MetaInfo,1}:\n GeneticVariation.VCF.MetaInfo:\n    tag: FORMAT\n  value: ID=\"GT\" Number=\"1\" Type=\"String\" Description=\"Genotype\"          \n GeneticVariation.VCF.MetaInfo:\n    tag: FORMAT\n  value: ID=\"GQ\" Number=\"1\" Type=\"Integer\" Description=\"Genotype Quality\"\n GeneticVariation.VCF.MetaInfo:\n    tag: FORMAT\n  value: ID=\"DP\" Number=\"1\" Type=\"Integer\" Description=\"Read Depth\"       \n GeneticVariation.VCF.MetaInfo:\n    tag: FORMAT\n  value: ID=\"HQ\" Number=\"2\" Type=\"Integer\" Description=\"Haplotype Quality\"VCF.MetaInfo variables in the header support the following accessors:Accessor Description\nmetainfotag tag string\nmetainfoval value string\nkeys keys of fields between \'<\' and \'>\'\nvalues values of fields between \'<\' and \'>\'\n[<key>] value of a field with keyjulia> metainfo = VCF.MetaInfo(\"##FORMAT=<ID=GT,Number=1,Type=String,Description=\\\"Genotype\\\">\")\nGeneticVariation.VCF.MetaInfo:\n    tag: FORMAT\n  value: ID=\"GT\" Number=\"1\" Type=\"String\" Description=\"Genotype\"\n\njulia> metainfotag(metainfo)\n\"FORMAT\"\n\njulia> metainfoval(metainfo)\n\"<ID=GT,Number=1,Type=String,Description=\\\"Genotype\\\">\"\n\njulia> keys(metainfo)\n4-element Array{String,1}:\n \"ID\"         \n \"Number\"     \n \"Type\"       \n \"Description\"\n\njulia> metainfo[\"ID\"]\n\"GT\"\nVCF.Record and BCF.Record variables support the following accessor functions (see the docstring of each accessor for the details):Accessor Description\nchrom chromosome name\npos reference position\nid unique identifiers\nref reference bases\nalt alternate bases\nqual Phred-scaled quality score\nfilter filter status\ninfo additional information\ninfokeys keys of additional information\nformat genotype format\ngenotype genotype informationjulia> record = VCF.Record(\"20\\t14370\\trs6054257\\tG\\tA\\t29\\tPASS\\tNS=3;DP=14;AF=0.5;DB;H2\\tGT:GQ:DP:HQ\\t0|0:48:1:51,51\\t1|0:48:8:51,51\")\nGeneticVariation.VCF.Record:\n   chromosome: 20\n     position: 14370\n   identifier: rs6054257\n    reference: G\n    alternate: A\n      quality: 29.0\n       filter: PASS\n  information: NS=3 DP=14 AF=0.5 DB H2\n       format: GT GQ DP HQ\n     genotype: [1] 0|0 48 1 51,51 [2] 1|0 48 8 51,51\n\njulia> VCF.chrom(record)\n\"20\"\n\njulia> VCF.pos(record)\n14370\n\njulia> VCF.id(record)\n1-element Array{String,1}:\n \"rs6054257\"\n\njulia> VCF.ref(record)\n\"G\"\n\njulia> VCF.alt(record)\n1-element Array{String,1}:\n \"A\"\n\njulia> VCF.qual(record)\n29.0\n\njulia> VCF.filter(record)\n1-element Array{String,1}:\n \"PASS\"\n\njulia> VCF.info(record)\n5-element Array{Pair{String,String},1}:\n \"NS\"=>\"3\"  \n \"DP\"=>\"14\"\n \"AF\"=>\"0.5\"\n \"DB\"=>\"\"   \n \"H2\"=>\"\"   \n\njulia> VCF.format(record)\n4-element Array{String,1}:\n \"GT\"\n \"GQ\"\n \"DP\"\n \"HQ\"\n\njulia> VCF.genotype(record)\n2-element Array{Array{String,1},1}:\n String[\"0|0\",\"48\",\"1\",\"51,51\"]\n String[\"1|0\",\"48\",\"8\",\"51,51\"]\n\njulia> VCF.genotype(record, 1:2, \"GT\")\n2-element Array{String,1}:\n \"0|0\"\n \"1|0\"\n\njulia> VCF.genotype(record, 1:1, \"GT\")\n1-element Array{String,1}:\n \"0|0\"\n\njulia> VCF.genotype(record, 1:2, \"GT\")\n2-element Array{String,1}:\n \"0|0\"\n \"1|0\"\n"
 },
 
 {
@@ -68,7 +68,7 @@ var documenterSearchIndex = {"docs": [
     "location": "man/site_counting.html#GeneticVariation.Conserved",
     "page": "Mutation Counting",
     "title": "GeneticVariation.Conserved",
-    "category": "Type",
+    "category": "type",
     "text": "A Conserved site describes a site where two aligned nucleotides are definately conserved. By definately conserved this means that the symbols of the site are non-ambiguity symbols, and they are the same symbol.\n\n\n\n"
 },
 
@@ -76,7 +76,7 @@ var documenterSearchIndex = {"docs": [
     "location": "man/site_counting.html#GeneticVariation.Mutated",
     "page": "Mutation Counting",
     "title": "GeneticVariation.Mutated",
-    "category": "Type",
+    "category": "type",
     "text": "A Mutated site describes a site where two aligned nucleotides are definately mutated. By definately mutated this means that the symbols of the site are non-ambiguity symbols, and they are not the same symbol.\n\n\n\n"
 },
 
@@ -84,7 +84,7 @@ var documenterSearchIndex = {"docs": [
     "location": "man/site_counting.html#GeneticVariation.Segregating",
     "page": "Mutation Counting",
     "title": "GeneticVariation.Segregating",
-    "category": "Type",
+    "category": "type",
     "text": "Segregating sites are positions which show differences (polymorphisms) between related genes in a sequence alignment (are not conserved). Segregating sites include conservative, semi-conservative and non-conservative mutations.\n\n\n\n"
 },
 
@@ -108,7 +108,7 @@ var documenterSearchIndex = {"docs": [
     "location": "man/diversity.html#GeneticVariation.gene_frequencies",
     "page": "Genetic Diversity",
     "title": "GeneticVariation.gene_frequencies",
-    "category": "Function",
+    "category": "function",
     "text": "gene_frequencies(seqcounts::Composition{T}) where T <: Sequence\n\nCompute gene_frequencies from a BioSequences.Composition variable that contains unique sequence counts.\n\n\n\ngene_frequencies(iterable)\n\nCompute the gene frequencies for any iterable with an eltype which is a concrete subtype of the abstract Sequence type.\n\n\n\n"
 },
 
@@ -124,7 +124,7 @@ var documenterSearchIndex = {"docs": [
     "location": "man/diversity.html#GeneticVariation.avg_mut",
     "page": "Genetic Diversity",
     "title": "GeneticVariation.avg_mut",
-    "category": "Function",
+    "category": "function",
     "text": "avg_mut(sequences)\n\nThe average number of mutations found in (n choose 2) pairwise comparisons of sequences (i, j) in a sample of sequences.\n\nsequences should be any indexable container of DNA sequence types.\n\n\n\n"
 },
 
@@ -140,7 +140,7 @@ var documenterSearchIndex = {"docs": [
     "location": "man/diversity.html#GeneticVariation.NL79",
     "page": "Genetic Diversity",
     "title": "GeneticVariation.NL79",
-    "category": "Function",
+    "category": "function",
     "text": "NL79(m::M, f::V) where {M<:AbstractMatrix{Float64},V<:AbstractVector{Float64}}\n\nCompute nucleotide diversity using a matrix of the number of mutations between sequence pairs, and a vector of the frequencies of each sequence in the population.\n\n\n\nNL79(sequences)\n\nCompute nucleotide diversity, as described by Nei and Li in 1979.\n\nThis measure is defined as the average number of nucleotide differences per site between two DNA sequences in all possible pairs in the sample population, and is often denoted by the greek letter pi.\n\nSequences should be any iterable that yields biosequence types.\n\nExamples\n\njulia> testSeqs = [dna\"AAAACTTTTACCCCCGGGGG\",\n                   dna\"AAAACTTTTACCCCCGGGGG\",\n                   dna\"AAAACTTTTACCCCCGGGGG\",\n                   dna\"AAAACTTTTACCCCCGGGGG\",\n                   dna\"AAAAATTTTACCCCCGTGGG\",\n                   dna\"AAAAATTTTACCCCCGTGGG\",\n                   dna\"AAAACTTTTTCCCCCGTAGG\",\n                   dna\"AAAACTTTTTCCCCCGTAGG\",\n                   dna\"AAAAATTTTTCCCCCGGAGG\",\n                   dna\"AAAAATTTTTCCCCCGGAGG\"]\n10-element Array{BioSequences.BioSequence{BioSequences.DNAAlphabet{4}},1}:\n AAAACTTTTACCCCCGGGGG\n AAAACTTTTACCCCCGGGGG\n AAAACTTTTACCCCCGGGGG\n AAAACTTTTACCCCCGGGGG\n AAAAATTTTACCCCCGTGGG\n AAAAATTTTACCCCCGTGGG\n AAAACTTTTTCCCCCGTAGG\n AAAACTTTTTCCCCCGTAGG\n AAAAATTTTTCCCCCGGAGG\n AAAAATTTTTCCCCCGGAGG\n\n julia> NL79(testSeqs)\n 0.096\n\n\n\n\n"
 },
 
