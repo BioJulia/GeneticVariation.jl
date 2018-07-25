@@ -175,7 +175,7 @@ function Record(base::Record;
             end
         end
     else
-        error("modifying genotype is yet supported")
+        error("modifying genotype is not yet supported")
     end
 
     return Record(data, 1:endof(data), sharedlen, offset - sharedlen)
@@ -248,7 +248,7 @@ end
 
 function n_info(rec::Record)
     checkfilled(rec)
-    return (load(Int32, rec.data, 16)[1] & 0x0000ffff) % Int
+    return (load(Int32, rec.data, 16)[1] & 0x0000FFFF) % Int
 end
 
 function n_format(rec::Record)
@@ -258,7 +258,7 @@ end
 
 function n_sample(rec::Record)
     checkfilled(rec)
-    return (load(UInt32, rec.data, 20)[1] & 0x000000ff) % Int
+    return (load(UInt32, rec.data, 20)[1] & 0x00FFFFFF) % Int
 end
 
 function id(rec::Record)
