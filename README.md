@@ -36,8 +36,7 @@ and Windows.
 
 | **PackageEvaluator** | **Latest Build Status** |
 |:--------------------:|:-----------------------:|
-| [![](http://pkg.julialang.org/badges/GeneticVariation_0.6.svg)](http://pkg.julialang.org/?pkg=GeneticVariation) [![](http://pkg.julialang.org/badges/GeneticVariation_0.7.svg)](http://pkg.julialang.org/?pkg=GeneticVriation) | 
-[![](https://travis-ci.org/BioJulia/GeneticVariation.jl.svg?branch=master)](https://travis-ci.org/BioJulia/GeneticVariation.jl) [![](https://ci.appveyor.com/api/projects/status/29um8ekg6en3s23a?svg=true)](https://ci.appveyor.com/project/Ward9250/geneticvariation-jl) [![](https://codecov.io/gh/BioJulia/GeneticVariation.jl/branch/master/graph/badge.svg)](https://codecov.io/gh/BioJulia/GeneticVariation.jl)
+| [![](http://pkg.julialang.org/badges/GeneticVariation_0.6.svg)](http://pkg.julialang.org/?pkg=GeneticVariation) [![](http://pkg.julialang.org/badges/GeneticVariation_0.7.svg)](http://pkg.julialang.org/?pkg=GeneticVriation) |  [![](https://travis-ci.org/BioJulia/GeneticVariation.jl.svg?branch=master)](https://travis-ci.org/BioJulia/GeneticVariation.jl) [![](https://ci.appveyor.com/api/projects/status/29um8ekg6en3s23a?svg=true)](https://ci.appveyor.com/project/Ward9250/geneticvariation-jl) [![](https://codecov.io/gh/BioJulia/GeneticVariation.jl/branch/master/graph/badge.svg)](https://codecov.io/gh/BioJulia/GeneticVariation.jl)
 
 ## Contributing
 
@@ -58,7 +57,7 @@ of the community, it will be "merged" in the ledger of our open collective by
 the core contributors and the person who filed the expense will be reimbursed.
 
 
-# Backers & Sponsors
+## Backers & Sponsors
 
 Thank you to all our backers and sponsors!
 
