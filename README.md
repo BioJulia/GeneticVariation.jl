@@ -3,6 +3,7 @@
 [![Latest Release](https://img.shields.io/github/release/BioJulia/GeneticVariation.jl.svg?style=flat-square)](https://github.com/BioJulia/GeneticVariation.jl/releases/latest)
 [![MIT License](https://img.shields.io/badge/license-MIT-green.svg?style=flat-square)](https://github.com/BioJulia/GeneticVariation.jl/blob/master/LICENSE)
 [![Stable documentation](https://img.shields.io/badge/docs-stable-blue.svg?style=flat-square)](https://biojulia.github.io/GeneticVariation.jl/stable)
+[![Latest documentation](https://img.shields.io/badge/docs-latest-blue.svg?style=flat-square)](https://biojulia.github.io/GeneticVariation.jl/latest)
 ![Lifecycle](https://img.shields.io/badge/lifecycle-maturing-blue.svg?style=flat-square)
 [![Chat on Discord](https://img.shields.io/badge/discord-chat-blue.svg?style=flat-square&logo=discord&colorB=%237289DA)](https://discord.gg/z73YNFz)
 
@@ -36,7 +37,8 @@ and Windows.
 
 | **PackageEvaluator** | **Latest Build Status** |
 |:--------------------:|:-----------------------:|
-| [![](http://pkg.julialang.org/badges/GeneticVariation_0.6.svg)](http://pkg.julialang.org/?pkg=GeneticVariation) [![](http://pkg.julialang.org/badges/GeneticVariation_0.7.svg)](http://pkg.julialang.org/?pkg=GeneticVriation) |  [![](https://travis-ci.org/BioJulia/GeneticVariation.jl.svg?branch=master)](https://travis-ci.org/BioJulia/GeneticVariation.jl) [![](https://ci.appveyor.com/api/projects/status/29um8ekg6en3s23a?svg=true)](https://ci.appveyor.com/project/Ward9250/geneticvariation-jl) [![](https://codecov.io/gh/BioJulia/GeneticVariation.jl/branch/master/graph/badge.svg)](https://codecov.io/gh/BioJulia/GeneticVariation.jl)
+| [![](http://pkg.julialang.org/badges/GeneticVariation_0.7.svg)](http://pkg.julialang.org/?pkg=GeneticVariation) [![](http://pkg.julialang.org/badges/GeneticVariation_1.0.svg)](http://pkg.julialang.org/?pkg=GeneticVriation) |  [![](https://travis-ci.org/BioJulia/GeneticVariation.jl.svg?branch=master)](https://travis-ci.org/BioJulia/GeneticVariation.jl) [![](https://ci.appveyor.com/api/projects/status/29um8ekg6en3s23a?svg=true)](https://ci.appveyor.com/project/Ward9250/geneticvariation-jl) [![](https://codecov.io/gh/BioJulia/GeneticVariation.jl/branch/master/graph/badge.svg)](https://codecov.io/gh/BioJulia/GeneticVariation.jl)
+
 
 ## Contributing
 
