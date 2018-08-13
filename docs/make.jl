@@ -12,8 +12,7 @@ makedocs(
             ],
             "Mutation Counting" => "man/site_counting.md",
             "Genetic Diversity" => "man/diversity.md"
-        ],
-        "Contributing" => "contributing.md"
+        ]
     ],
     authors = "Kenta Sato, Ben J. Ward, The BioJulia Organisation and other contributors."
 )
