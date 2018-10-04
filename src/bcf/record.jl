@@ -115,7 +115,7 @@ function Record(base::Record;
         if !isa(filter, Vector)
             filter = [filter]
         end
-        offset = storevec!(data, offset, convert(Vector{Int8}, filter - 1))
+        offset = storevec!(data, offset, convert(Vector{Int8}, filter .- 1))
         boffset = skipvec(base.data, boffset)
     end
 
@@ -127,10 +127,10 @@ function Record(base::Record;
             offset, boffset = copyvec!(data, offset, base.data, boffset)
         end
     else
-        if !isa(info, Associative)
-            throw(ArgumentError("info must be an associative object"))
+        if !isa(info, AbstractDict)
+            throw(ArgumentError("info must be an abstract dictionary"))
         end
-        keyvec = Vector{Int8}(1)
+        keyvec = Vector{Int8}(undef, 1)
         for (key, val) in info
             if !isa(key, Integer)
                 throw(ArgumentError("info key must be an integer"))
@@ -178,7 +178,7 @@ function Record(base::Record;
         error("modifying genotype is not yet supported")
     end
 
-    return Record(data, 1:endof(data), sharedlen, offset - sharedlen)
+    return Record(data, 1:lastindex(data), sharedlen, offset - sharedlen)
 end
 
 function Base.show(io::IO, record::Record)
@@ -292,7 +292,7 @@ function alt(record::Record)
     len, offset = loadveclen(record.data, offset + len)
     # load ALTs
     N = n_allele(record) - 1
-    alt = Vector{String}(N)
+    alt = Vector{String}(undef, N)
     for n in 1:N
         str, offset = loadstr(record.data, offset + len)
         alt[n] = str
@@ -333,15 +333,15 @@ function info(record::Record; simplify::Bool=true)::Vector{Tuple{Int,Any}}
     end
     offset += len
     # load INFO
-    ret = Vector{Tuple{Int,Any}}(n_info(record))
-    for i in 1:endof(ret)
+    ret = Vector{Tuple{Int,Any}}(undef, n_info(record))
+    for i in 1:lastindex(ret)
         key, offset = loadvec(record.data, offset)
         @assert length(key) == 1
         val, offset = loadvec(record.data, offset)
         if simplify
             if isa(val, Vector) && length(val) == 1
                 val = val[1]
-            elseif isa(val, Vector{Void}) && isempty(val)
+            elseif isa(val, Vector{Nothing}) && isempty(val)
                 val = nothing
             end
         end
@@ -354,14 +354,14 @@ end
     info(record::Record, key::Integer, [simplify::Bool=true])
 Get the additional information of `record` with `key`.
 When `simplify` is `true`, a vector with a single element is converted to the
-element itself and an empty vector of the void type is converted to `nothing`.
+element itself and an empty vector of the Nothing type is converted to `nothing`.
 """
 function info(record::Record, key::Integer; simplify::Bool=true)
     checkfilled(record)
     # skip ID, REF, ALTs and FILTER
     offset::Int = 24
     len = 0
-    for _ in 1:n_allele(record)+2
+    for _ in 1:n_allele(record) + 2
         len, offset = loadveclen(record.data, offset + len)
     end
     offset += len
@@ -374,7 +374,7 @@ function info(record::Record, key::Integer; simplify::Bool=true)
             if simplify
                 if isa(val, Vector) && length(val) == 1
                     val = val[1]
-                elseif isa(val, Vector{Void}) && isempty(val)
+                elseif isa(val, Vector{Nothing}) && isempty(val)
                     val = nothing
                 end
             end
@@ -569,8 +569,8 @@ function loadvecbody(data::Vector{UInt8}, offset::Int, head::Tuple{Symbol,Int})
         t == :int16 ? Int16 :
         t == :int32 ? Int32 :
         t == :float32 ? Float32 :
-        t == :character ? UInt8 : Void
-    ret = Vector{T}(len)
+        t == :character ? UInt8 : Nothing
+    ret = Vector{T}(undef, len)
     for i in 1:len
         ret[i], offset = load(T, data, offset)
     end
@@ -664,15 +664,15 @@ function copyvecbody!(dst::Vector{UInt8}, doffset::Int, src::Vector{UInt8}, soff
     if length(dst) < doffset + n
         resize!(dst, doffset + n)
     end
-    copy!(dst, doffset + 1, src, soffset + 1, n)
+    copyto!(dst, doffset + 1, src, soffset + 1, n)
     return doffset + n, soffset + n
 end
 
 function memcpy(dst::Ptr, src::Ptr, n::Int)
-    ccall(:memcpy, Ptr{Void}, (Ptr{Void}, Ptr{Void}, Csize_t), dst, src, n)
+    ccall(:memcpy, Ptr{Cvoid}, (Ptr{Cvoid}, Ptr{Cvoid}, Csize_t), dst, src, n)
     return nothing
 end
 
 function memcmp(p1::Ptr, p2::Ptr, n::Integer)
-    return ccall(:memcmp, Cint, (Ptr{Void}, Ptr{Void}, Csize_t), p1, p2, n)
+    return ccall(:memcmp, Cint, (Ptr{Cvoid}, Ptr{Cvoid}, Csize_t), p1, p2, n)
 end

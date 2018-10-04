@@ -53,7 +53,7 @@ function MetaInfo(str::AbstractString)
 end
 
 function Base.convert(::Type{MetaInfo}, str::AbstractString)
-    return MetaInfo(convert(Vector{UInt8}, str))
+    return MetaInfo(Vector{UInt8}(str))
 end
 
 function initialize!(metainfo::MetaInfo)
@@ -90,7 +90,7 @@ function checkfilled(metainfo::MetaInfo)
     end
 end
 
-function MetaInfo(base::MetaInfo; tag=nothing, value=nothing)
+function MetaInfo(base::MetaInfo; tag = nothing, value = nothing)
     checkfilled(base)
     buf = IOBuffer()
     print(buf, "##")
@@ -104,7 +104,7 @@ function MetaInfo(base::MetaInfo; tag=nothing, value=nothing)
         write(buf, base.data[base.val])
     elseif isa(value, String)
         print(buf, value)
-    elseif isa(value, Associative) || isa(value, Vector)
+    elseif isa(value, AbstractDict) || isa(value, Vector)
         print(buf, '<')
         for (i, (key, val)) in enumerate(value)
             if i != 1
@@ -123,7 +123,7 @@ function MetaInfo(base::MetaInfo; tag=nothing, value=nothing)
 end
 
 function needs_quote(val::String)
-    return contains(val, " ") || contains(val, ",") || contains(val, "\"") || contains(val, "\\")
+    return occursin(" ", val) || occursin(",", val) || occursin("\"", val) || occursin("\\", val)
 end
 
 function isequaltag(metainfo::MetaInfo, tag::AbstractString)

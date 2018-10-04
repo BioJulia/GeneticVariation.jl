@@ -29,7 +29,7 @@ GeneticVariation.VCF.Header:
   metainfo tags: fileformat fileDate source reference contig phasing INFO FILTER FORMAT
      sample IDs: NA00001 NA00002 NA00003
 
-julia> find(header(reader), "FORMAT")
+julia> findall(header(reader), "FORMAT")
 4-element Array{GeneticVariation.VCF.MetaInfo,1}:
  GeneticVariation.VCF.MetaInfo:
     tag: FORMAT

@@ -24,7 +24,7 @@ in the population.
 """
 function NL79(m::AbstractMatrix{Float64}, f::AbstractVector{Float64})
     π = 0.0
-    @inbounds for i = 1:endof(f), j = (i + 1):endof(f)
+    @inbounds for i = 1:lastindex(f), j = (i + 1):lastindex(f)
         π += m[i, j] * f[i] * f[j]
     end
     return 2 * π
@@ -98,7 +98,7 @@ function avg_mut(sequences)
     n = 0
     @inbounds for i in eachindex(sequences)
         si = sequences[i]
-        for j in (i + 1):endof(sequences)
+        for j in (i + 1):lastindex(sequences)
             nmut += count(Mutated, si, sequences[j])[1]
             n += 1
         end

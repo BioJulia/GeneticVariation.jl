@@ -1,10 +1,10 @@
 @testset "VCF" begin
     metainfo = VCF.MetaInfo()
     @test !isfilled(metainfo)
-    @test ismatch(r"^GeneticVariation.VCF.MetaInfo: <not filled>", repr(metainfo))
+    @test occursin(r"^GeneticVariation.VCF.MetaInfo: <not filled>", repr(metainfo))
     @test_throws ArgumentError metainfotag(metainfo)
 
-    metainfo = VCF.MetaInfo(b"##source=foobar1234")
+    metainfo = VCF.MetaInfo(Vector{UInt8}("##source=foobar1234"))
     @test isfilled(metainfo)
     @test metainfotag(metainfo) == "source"
     @test metainfoval(metainfo) == "foobar1234"
@@ -30,7 +30,7 @@
 
     record = VCF.Record()
     @test !isfilled(record)
-    @test ismatch(r"^GeneticVariation.VCF.Record: <not filled>", repr(record))
+    @test occursin(r"^GeneticVariation.VCF.Record: <not filled>", repr(record))
     @test_throws ArgumentError VCF.chrom(record)
 
     record = VCF.Record("20\t302\t.\tT\tTA\t999\t.\t.\tGT")
@@ -57,9 +57,9 @@
 
     # empty data is not a valid VCF record
     @test_throws ArgumentError VCF.Record("")
-    @test_throws ArgumentError VCF.Record(b"")
+    @test_throws ArgumentError VCF.Record(Vector{UInt8}(""))
 
-    record = VCF.Record(b".\t.\t.\t.\t.\t.\t.\t.\t")
+    record = VCF.Record(Vector{UInt8}(".\t.\t.\t.\t.\t.\t.\t.\t"))
     @test isfilled(record)
     @test !VCF.haschrom(record)
     @test !VCF.haspos(record)
@@ -100,7 +100,7 @@
         push!(header, "##reference=file:///seq/references/1000GenomesPilot-NCBI36.fasta")
         @test !isempty(header)
         @test length(header) == 1
-        unshift!(header, "##fileformat=VCFv4.3")
+        pushfirst!(header, "##fileformat=VCFv4.3")
         @test length(header) == 2
         @test collect(header) == [
             VCF.MetaInfo("##fileformat=VCFv4.3"),
@@ -116,10 +116,10 @@
     end
 
     # minimum header
-    data = b"""
+    data = Vector{UInt8}("""
     ##fileformat=VCFv4.3
     #CHROM	POS	ID	REF	ALT	QUAL	FILTER	INFO
-    """
+    """)
     reader = VCF.Reader(BufferedInputStream(data))
     @test isa(header(reader), VCF.Header)
     let header = header(reader)
@@ -130,7 +130,7 @@
     end
 
     # realistic header
-    data = b"""
+    data = Vector{UInt8}("""
     ##fileformat=VCFv4.2
     ##fileDate=20090805
     ##source=myImputationProgramV3.1
@@ -142,7 +142,7 @@
     ##INFO=<ID=AF,Number=A,Type=Float,Description="Allele Frequency">
     ##INFO=<ID=AA,Number=1,Type=String,Description="Ancestral Allele">
     #CHROM	POS	ID	REF	ALT	QUAL	FILTER	INFO	FORMAT	NA00001	NA00002	NA00003
-    """
+    """)
     reader = VCF.Reader(BufferedInputStream(data))
     @test isa(header(reader), VCF.Header)
 
@@ -155,8 +155,8 @@
             @test_throws ArgumentError keys(metainfo)
             @test_throws ArgumentError values(metainfo)
         end
-        @test length(find(header, "fileformat")) == 1
-        @test first(find(header, "fileformat")) == header.metainfo[1]
+        @test length(findall(header, "fileformat")) == 1
+        @test first(findall(header, "fileformat")) == header.metainfo[1]
 
         let metainfo = header.metainfo[2]
             @test metainfotag(metainfo) == "fileDate"
@@ -183,12 +183,12 @@
             @test metainfo["ID"] == "NS"
             @test metainfo["Type"] == "Integer"
         end
-        @test length(find(header, "INFO")) == 4
+        @test length(findall(header, "INFO")) == 4
 
         @test header.sampleID == ["NA00001", "NA00002", "NA00003"]
     end
 
-    data = b"""
+    data = Vector{UInt8}("""
     ##fileformat=VCFv4.3
     ##contig=<ID=chr1>
     ##contig=<ID=chr2>
@@ -198,7 +198,7 @@
     #CHROM\tPOS\tID\tREF\tALT\tQUAL\tFILTER\tINFO\tFORMAT\tNA00001\tNA00002
     chr1\t1234\trs001234\tA\tC\t30\tPASS\tDP=10;AF=0.3\tGT\t0|0\t0/1
     chr2\t4\t.\tA\tAA,AAT\t.\t.\tDP=5\tGT:DP\t0|1:42\t0/1
-    """
+    """)
     reader = VCF.Reader(BufferedInputStream(data))
     record = VCF.Record()
 
@@ -221,7 +221,7 @@
     @test VCF.genotype(record, 2, "GT") == "0/1"
     @test VCF.genotype(record, 1:2, "GT") == ["0|0", "0/1"]
     @test VCF.genotype(record, :, "GT") == VCF.genotype(record, 1:2, "GT")
-    @test ismatch(r"^GeneticVariation.VCF.Record:\n.*", repr(record))
+    @test occursin(r"^GeneticVariation.VCF.Record:\n.*", repr(record))
 
     @test read!(reader, record) === record
     @test VCF.chrom(record) == "chr2"
@@ -273,5 +273,5 @@
 end
 
 function parsehex(str)
-    return map(x -> parse(UInt8, x, 16), split(str, ' '))
+    return map(x -> parse(UInt8, x, base = 16), split(str, ' '))
 end

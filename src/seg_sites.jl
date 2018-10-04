@@ -22,9 +22,9 @@ function Base.count(::Type{Segregating}, seqs::Vector{T}) where T <: Sequence
     while cont
         i += 1
         @inbounds refelem = refseq[i]
-        @inbounds for j in 2:endof(seqs)
+        @inbounds for j in 2:lastindex(seqs)
             seq = seqs[j]
-            cont = ifelse(endof(seq) == i, false, true)
+            cont = ifelse(lastindex(seq) == i, false, true)
             if refelem != seq[i]
                 count += 1
                 break

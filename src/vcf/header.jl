@@ -39,6 +39,11 @@ function Base.length(header::Header)
     return length(header.metainfo)
 end
 
+function Base.iterate(header::Header, i = 1)
+    return i > lastindex(header.metainfo) ? nothing : (header.metainfo[i], i + 1)
+end
+
+#=
 function Base.start(header::Header)
     return 1
 end
@@ -50,13 +55,14 @@ end
 function Base.next(header::Header, i)
     return header.metainfo[i], i + 1
 end
+=#
 
-function Base.find(header::Header, tag::AbstractString)
+function Base.findall(header::Header, tag::AbstractString)
     return Base.filter(m -> isequaltag(m, tag), header.metainfo)
 end
 
-function Base.unshift!(header::Header, metainfo)
-    unshift!(header.metainfo, convert(MetaInfo, metainfo))
+function Base.pushfirst!(header::Header, metainfo)
+    pushfirst!(header.metainfo, convert(MetaInfo, metainfo))
     return header
 end
 
