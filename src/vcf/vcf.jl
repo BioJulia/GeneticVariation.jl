@@ -1,5 +1,5 @@
 # vcf.jl
-# ===================
+# ======
 #
 # A submodule for reading, writing, and working with VCF formatted files.
 #

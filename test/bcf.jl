@@ -1,7 +1,7 @@
 @testset "BCF" begin
     record = BCF.Record()
     @test !isfilled(record)
-    @test ismatch(r"^GeneticVariation.BCF.Record: <not filled>", repr(record))
+    @test occursin(r"^GeneticVariation.BCF.Record: <not filled>", repr(record))
     @test_throws ArgumentError BCF.chrom(record)
 
     record = BCF.Record()
@@ -9,7 +9,7 @@
     record.indivlen = 0x00
     # generated from bcftools 1.3.1 (htslib 1.3.1)
     record.data = parsehex("00 00 00 00 ff ff ff ff 01 00 00 00 01 00 80 7f 00 00 01 00 00 00 00 00 07 17 2e 00")
-    record.filled = 1:endof(record.data)
+    record.filled = 1:lastindex(record.data)
     @test BCF.chrom(record) == 1
     record = BCF.Record(record)
     @test isa(record, BCF.Record)
@@ -25,7 +25,7 @@
     @test BCF.ref(record) == "AT"
     record = BCF.Record(record, alt=["ATT", "ACT"])
     @test BCF.alt(record) == ["ATT", "ACT"]
-    record = BCF.Record(record, filter=[2, 3])
+    record = BCF.Record(record, filter = [2, 3])
     @test BCF.filter(record) == [2, 3]
     record = BCF.Record(record, info=Dict(1 => Int8[42]))
     @test BCF.info(record) == [(1, 42)]
@@ -36,9 +36,9 @@
     bcfdir = joinpath(fmtdir, "BCF")
     reader = BCF.Reader(open(joinpath(bcfdir, "example.bcf")))
     let header = header(reader)
-        @test length(find(header, "fileformat")) == 1
-        @test find(header, "fileformat")[1] == VCF.MetaInfo("##fileformat=VCFv4.2")
-        @test length(find(header, "FORMAT")) == 4
+        @test length(findall(header, "fileformat")) == 1
+        @test findall(header, "fileformat")[1] == VCF.MetaInfo("##fileformat=VCFv4.2")
+        @test length(findall(header, "FORMAT")) == 4
     end
     record = BCF.Record()
     @test read!(reader, record) === record
@@ -58,7 +58,7 @@
     @test BCF.genotype(record, 1, 10) == [48]
     @test BCF.genotype(record, 2, 9) == [4,3]
     @test BCF.genotype(record, :, 9) == [[2,3],[4,3],[4,4]]
-    @test ismatch(r"^GeneticVariation.BCF.Record:\n.*", repr(record))
+    @test occursin(r"^GeneticVariation.BCF.Record:\n.*", repr(record))
     close(reader)
 
     # round-trip test

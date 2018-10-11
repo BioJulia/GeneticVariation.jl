@@ -49,14 +49,14 @@
         end
         @inline function testcount2(::Type{P}, a::BioSequence, b::BioSequence) where P <: BioSequences.Position
             k = 0
-            @inbounds for idx in 1:min(endof(a), endof(b))
+            @inbounds for idx in 1:min(lastindex(a), lastindex(b))
                 k += issite(P, a, b, idx)
             end
             return k
         end
         @inline function testcount(::Type{P}, a::BioSequence, b::BioSequence) where P <: BioSequences.Position
             k, c = 0, 0
-            @inbounds for idx in 1:min(endof(a), endof(b))
+            @inbounds for idx in 1:min(lastindex(a), lastindex(b))
                 isvalid = !(isgap(a[idx]) || isgap(b[idx])) && !(isambiguous(a[idx]) || isambiguous(b[idx]))
                 k += issite(P, a, b, idx) && isvalid
                 c += isvalid

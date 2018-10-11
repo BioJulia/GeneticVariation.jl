@@ -3,10 +3,11 @@ os:
   - linux
   - osx
 julia:
-  - 0.7
   - 1.0
+  - nightly
 notifications:
-  email: false
+  email:
+      - ward9250@gmail.com
 after_success:
   - julia -e 'using Pkg; Pkg.add("Documenter"); Pkg.add("Coverage")'
   - julia -e 'using Coverage; import GeneticVariation; cd(dirname(dirname(pathof(GeneticVariation)))); Codecov.submit(process_folder())'
