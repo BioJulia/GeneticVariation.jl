@@ -2,6 +2,7 @@
 CurrentModule = GeneticVariation
 DocTestSetup = quote
     using GeneticVariation
+    using BioSequences
 end
 ```
 
