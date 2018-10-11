@@ -23,7 +23,6 @@ Install GeneticVariation from the Julia REPL:
 ```julia
 using Pkg
 add("GeneticVariation")
-# Pkg.add("GeneticVariation") for julia prior to v0.7
 ```
 
 If you are interested in the cutting edge of the development, please check out
@@ -32,12 +31,12 @@ the master branch to try new features before release.
 
 ## Testing
 
-GeneticVariation is tested against julia `0.6` and `0.7-dev` on Linux, OS X,
+GeneticVariation is tested against julia `1.X.Y` on Linux, OS X,
 and Windows.
 
 | **PackageEvaluator** | **Latest Build Status** |
 |:--------------------:|:-----------------------:|
-| [![](http://pkg.julialang.org/badges/GeneticVariation_0.7.svg)](http://pkg.julialang.org/?pkg=GeneticVariation) [![](http://pkg.julialang.org/badges/GeneticVariation_1.0.svg)](http://pkg.julialang.org/?pkg=GeneticVriation) |  [![](https://travis-ci.org/BioJulia/GeneticVariation.jl.svg?branch=master)](https://travis-ci.org/BioJulia/GeneticVariation.jl) [![](https://ci.appveyor.com/api/projects/status/29um8ekg6en3s23a?svg=true)](https://ci.appveyor.com/project/Ward9250/geneticvariation-jl) [![](https://codecov.io/gh/BioJulia/GeneticVariation.jl/branch/master/graph/badge.svg)](https://codecov.io/gh/BioJulia/GeneticVariation.jl)
+|  [![](http://pkg.julialang.org/badges/GeneticVariation_1.0.svg)](http://pkg.julialang.org/?pkg=GeneticVriation) |  [![](https://travis-ci.org/BioJulia/GeneticVariation.jl.svg?branch=master)](https://travis-ci.org/BioJulia/GeneticVariation.jl) [![](https://ci.appveyor.com/api/projects/status/29um8ekg6en3s23a?svg=true)](https://ci.appveyor.com/project/Ward9250/geneticvariation-jl) [![](https://codecov.io/gh/BioJulia/GeneticVariation.jl/branch/master/graph/badge.svg)](https://codecov.io/gh/BioJulia/GeneticVariation.jl)
 
 
 ## Contributing
