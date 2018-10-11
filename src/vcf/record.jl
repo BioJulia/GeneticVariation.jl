@@ -69,7 +69,7 @@ function Record(str::AbstractString)
 end
 
 function Base.convert(::Type{Record}, str::AbstractString)
-    return Record(convert(Vector{UInt8}, str))
+    return Record(Vector{UInt8}(str))
 end
 
 function initialize!(record::Record)
@@ -234,11 +234,11 @@ function Record(base::Record;
         if isempty(base.infokey)
             print(buf, '.')
         else
-            write(buf, base.data[first(base.infokey[1]):last(infovalrange(base, endof(base.infokey)))])
+            write(buf, base.data[first(base.infokey[1]):last(infovalrange(base, lastindex(base.infokey)))])
         end
     else
-        if !isa(info, Associative)
-            throw(ArgumentError("info must be an associative object"))
+        if !isa(info, AbstractDict)
+            throw(ArgumentError("info must be an AbstractDict"))
         elseif isempty(info)
             print(buf, '.')
         else
@@ -281,8 +281,8 @@ function Record(base::Record;
         else
             allkeys = String[]
             for indiv in genotype
-                if !isa(indiv, Associative)
-                    throw(ArgumentError("individual must be an associative"))
+                if !isa(indiv, AbstractDict)
+                    throw(ArgumentError("individual must be anabstract dictionary"))
                 end
                 append!(allkeys, keys(indiv))
             end
@@ -497,7 +497,7 @@ function hasinfo(record::Record, key::String)
 end
 
 function findinfokey(record::Record, key::String)
-    for i in 1:endof(record.infokey)
+    for i in 1:lastindex(record.infokey)
         if isequaldata(key, record.data, record.infokey[i])
             return i
         end
@@ -520,10 +520,10 @@ function infovalrange(record::Record, i::Int)
     checkfilled(record)
     data = record.data
     key = record.infokey[i]
-    if last(key) + 1 ≤ endof(data) && data[last(key)+1] == UInt8('=')
-        endpos = search(data, ';', last(key)+1)
+    if last(key) + 1 ≤ lastindex(data) && data[last(key)+1] == UInt8('=')
+        endpos = something(findnext(isequal(0x3B), data, last(key)+1), 0) # 0x3B is byte equivalent of char ';'.
         if endpos == 0
-            endpos = search(data, '\t', last(key)+1)
+            endpos = something(findnext(isequal(0x09), data, last(key)+1), 0) # 0x09 is byte equivalent of char '\t'
             @assert endpos != 0
         end
         return last(key)+2:endpos-1
@@ -555,8 +555,8 @@ Get the genotypes of `record`.
 function genotype(record::Record)
     checkfilled(record)
     ret = Vector{String}[]
-    for i in 1:endof(record.genotype)
-        push!(ret, genotype_impl(record, i, 1:endof(record.format)))
+    for i in 1:lastindex(record.genotype)
+        push!(ret, genotype_impl(record, i, 1:lastindex(record.format)))
     end
     return ret
 end
@@ -568,7 +568,7 @@ This is effectively equivalent to `genotype(record)[index]` but more efficient.
 """
 function genotype(record::Record, index::Integer)
     checkfilled(record)
-    return genotype_impl(record, index, 1:endof(record.format))
+    return genotype_impl(record, index, 1:lastindex(record.format))
 end
 
 """
@@ -580,7 +580,7 @@ Trailing fields that are dropped are filled with `"."`.
 function genotype(record::Record, index::Integer, key::String)::String
     checkfilled(record)
     k = findgenokey(record, key)
-    if k == 0
+    if k == nothing
         throw(KeyError(key))
     end
     return genotype_impl(record, index, k)
@@ -594,7 +594,7 @@ end
 function genotype(record::Record, indexes::AbstractVector{T}, key::String)::Vector{String} where T<:Integer
     checkfilled(record)
     k = findgenokey(record, key)
-    if k == 0
+    if k == nothing
         throw(KeyError(key))
     end
     return [genotype_impl(record, i, k) for i in indexes]
@@ -603,10 +603,10 @@ end
 function genotype(record::Record, indexes::AbstractVector{T}, keys::AbstractVector{String})::Vector{Vector{String}} where T<:Integer
     checkfilled(record)
     ks = Vector{Int}(length(keys))
-    for i in 1:endof(keys)
+    for i in 1:lastindex(keys)
         key = keys[i]
         k = findgenokey(record, key)
-        if k == 0
+        if k == nothing
             throw(KeyError(key))
         end
         ks[i] = k
@@ -615,7 +615,7 @@ function genotype(record::Record, indexes::AbstractVector{T}, keys::AbstractVect
 end
 
 function genotype(record::Record, ::Colon, key::String)::Vector{String}
-    return genotype(record, 1:endof(record.genotype), key)
+    return genotype(record, 1:lastindex(record.genotype), key)
 end
 
 function findgenokey(record::Record, key::String)
@@ -628,7 +628,7 @@ end
 
 function genotype_impl(record::Record, index::Int, key::Int)
     geno = record.genotype[index]
-    if key > endof(geno)  # dropped field
+    if key > lastindex(geno)  # dropped field
         return "."
     else
         return String(record.data[geno[key]])
@@ -663,7 +663,7 @@ function Base.show(io::IO, record::Record)
         if hasformat(record)
             println(io)
             print(io, "     genotype:")
-            for i in 1:endof(record.genotype)
+            for i in 1:lastindex(record.genotype)
                 print(io, " [$(i)] ", let x = genotype(record, i); isempty(x) ? "." : join(x, " "); end)
             end
         end
@@ -683,5 +683,5 @@ function isequaldata(str::String, data::Vector{UInt8}, range::UnitRange{Int})
 end
 
 function memcmp(p1::Ptr, p2::Ptr, n::Integer)
-    return ccall(:memcmp, Cint, (Ptr{Void}, Ptr{Void}, Csize_t), p1, p2, n)
+    return ccall(:memcmp, Cint, (Ptr{Cvoid}, Ptr{Cvoid}, Csize_t), p1, p2, n)
 end

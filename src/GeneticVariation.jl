@@ -43,7 +43,6 @@ export
     isfilled,
     MissingFieldException
 
-importall BioCore
 import BioSequences:
     BioSequences,
     Alphabet,
@@ -63,8 +62,12 @@ import BioSequences:
     Position,
     RNAAlphabet,
     Sequence
+    
+import BioCore:
+    metainfotag,
+    metainfoval,
+    header
 
-import Compat: @compat
 import Combinatorics.permutations
 import IntervalTrees: Interval, IntervalValue
 import Twiddle:

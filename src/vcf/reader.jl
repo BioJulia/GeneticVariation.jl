@@ -49,7 +49,7 @@ function BioCore.header(reader::Reader)
 end
 
 # VCF v4.3
-Base.info("Compiling VCF parser...")
+@info "Compiling VCF parser..."
 const vcf_metainfo_machine, vcf_record_machine, vcf_header_machine, vcf_body_machine = (function ()
     cat = Automa.RegExp.cat
     rep = Automa.RegExp.rep
@@ -74,7 +74,7 @@ const vcf_metainfo_machine, vcf_record_machine, vcf_header_machine, vcf_body_mac
 
     # All kinds of meta-information line after 'fileformat' are handled here.
     metainfo = let
-        tag = re"[0-9A-Za-z_]+"
+        tag = re"[0-9A-Za-z_\.]+"
         tag.actions[:enter] = [:mark1]
         tag.actions[:exit]  = [:metainfo_tag]
 
@@ -219,13 +219,13 @@ const vcf_metainfo_machine, vcf_record_machine, vcf_header_machine, vcf_body_mac
 end)()
 
 const vcf_metainfo_actions = Dict(
-    :metainfo_tag      => :(record.tag = (mark1:p-1) - offset),
-    :metainfo_val      => :(record.val = (mark2:p-1) - offset; record.dict = data[mark2] == UInt8('<')),
-    :metainfo_dict_key => :(push!(record.dictkey, (mark1:p-1) - offset)),
-    :metainfo_dict_val => :(push!(record.dictval, (mark1:p-1) - offset)),
+    :metainfo_tag      => :(record.tag = (mark1:p-1) .- offset),
+    :metainfo_val      => :(record.val = (mark2:p-1) .- offset; record.dict = data[mark2] == UInt8('<')),
+    :metainfo_dict_key => :(push!(record.dictkey, (mark1:p-1) .- offset)),
+    :metainfo_dict_val => :(push!(record.dictval, (mark1:p-1) .- offset)),
     :metainfo          => quote
         BioCore.ReaderHelper.resize_and_copy!(record.data, data, offset+1:p-1)
-        record.filled = (offset+1:p-1) - offset
+        record.filled = (offset+1:p-1) .- offset
     end,
     :anchor            => :(),
     :mark1             => :(mark1 = p),
@@ -245,7 +245,7 @@ eval(
         merge(vcf_metainfo_actions, Dict(
             :metainfo => quote
                 BioCore.ReaderHelper.resize_and_copy!(record.data, data, BioCore.ReaderHelper.upanchor!(stream):p-1)
-                record.filled = (offset+1:p-1) - offset
+                record.filled = (offset+1:p-1) .- offset
                 @assert isfilled(record)
                 push!(reader.header.metainfo, record)
                 BioCore.ReaderHelper.ensure_margin!(stream)
@@ -257,20 +257,20 @@ eval(
             :anchor    => :(BioCore.ReaderHelper.anchor!(stream, p); offset = p - 1)))))
 
 const vcf_record_actions = Dict(
-    :record_chrom        => :(record.chrom = (mark:p-1) - offset),
-    :record_pos          => :(record.pos = (mark:p-1) - offset),
-    :record_id           => :(push!(record.id, (mark:p-1) - offset)),
-    :record_ref          => :(record.ref = (mark:p-1) - offset),
-    :record_alt          => :(push!(record.alt, (mark:p-1) - offset)),
-    :record_qual         => :(record.qual = (mark:p-1) - offset),
-    :record_filter       => :(push!(record.filter, (mark:p-1) - offset)),
-    :record_info_key     => :(push!(record.infokey, (mark:p-1) - offset)),
-    :record_format       => :(push!(record.format, (mark:p-1) - offset)),
+    :record_chrom        => :(record.chrom = (mark:p-1) .- offset),
+    :record_pos          => :(record.pos = (mark:p-1) .- offset),
+    :record_id           => :(push!(record.id, (mark:p-1) .- offset)),
+    :record_ref          => :(record.ref = (mark:p-1) .- offset),
+    :record_alt          => :(push!(record.alt, (mark:p-1) .- offset)),
+    :record_qual         => :(record.qual = (mark:p-1) .- offset),
+    :record_filter       => :(push!(record.filter, (mark:p-1) .- offset)),
+    :record_info_key     => :(push!(record.infokey, (mark:p-1) .- offset)),
+    :record_format       => :(push!(record.format, (mark:p-1) .- offset)),
     :record_genotype     => :(push!(record.genotype, UnitRange{Int}[])),
-    :record_genotype_elm => :(push!(record.genotype[end], (mark:p-1) - offset)),
+    :record_genotype_elm => :(push!(record.genotype[end], (mark:p-1) .- offset)),
     :record              => quote
         BioCore.ReaderHelper.resize_and_copy!(record.data, data, 1:p-1)
-        record.filled = (offset+1:p-1) - offset
+        record.filled = (offset+1:p-1) .- offset
     end,
     :anchor              => :(),
     :mark                => :(mark = p))
@@ -288,7 +288,7 @@ eval(
         merge(vcf_record_actions, Dict(
             :record    => quote
                 BioCore.ReaderHelper.resize_and_copy!(record.data, data, BioCore.ReaderHelper.upanchor!(stream):p-1)
-                record.filled = (offset+1:p-1) - offset
+                record.filled = (offset+1:p-1) .- offset
                 found_record = true
                 @escape
             end,
