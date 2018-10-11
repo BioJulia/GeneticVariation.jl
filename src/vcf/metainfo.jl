@@ -197,7 +197,7 @@ function Base.show(io::IO, metainfo::MetaInfo)
                 print(io, ' ', key, "=\"", val, '"')
             end
         else
-            print(io, ' ', metainfoval(metainfo))
+            print(io, ' ', BioCore.metainfoval(metainfo))
         end
     else
         print(io, " <not filled>")
