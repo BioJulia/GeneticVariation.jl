@@ -5,6 +5,14 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+### Added
+- :arrow_up: Support for julia v1.0
+
+### Changed
+- Fixed an issue with parsing VCF files from recent GATK releases.
+
+### Removed
+- :exclamation: Dropped support for julia v0.6 and v0.7
 
 ## [0.3.2] - 2018-07-25
 ### Added
@@ -16,7 +24,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [0.3.1] - 2017-10-10
 ### Added
-- Method computing the average number of mutations, that should hav gone into
+- Method computing the average number of mutations, that should have gone into
   version 0.3.0.
 
 ## [0.3.0] - 2017-10-05
