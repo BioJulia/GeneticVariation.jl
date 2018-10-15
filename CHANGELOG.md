@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [0.3.3] - 2018-10-15
+### Added
+- Bugfix for reading VCF files output by GATK by allowing periods in the metadata tags.
+
 ## [0.3.2] - 2018-07-25
 ### Added
 - Project files: HUMANS.md & CHANGELOG.md
