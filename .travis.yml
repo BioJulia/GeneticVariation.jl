@@ -9,6 +9,6 @@ notifications:
   email:
       - ward9250@gmail.com
 after_success:
-  - julia -e 'using Pkg; Pkg.add("Documenter"); Pkg.add("Coverage")'
+  - julia -e 'using Pkg; ps=Pkg.PackageSpec(name="Documenter", version="0.19"); Pkg.add(ps); Pkg.pin(ps); Pkg.add("Coverage")'
   - julia -e 'using Coverage; import GeneticVariation; cd(dirname(dirname(pathof(GeneticVariation)))); Codecov.submit(process_folder())'
   - julia -e 'import GeneticVariation; cd(dirname(dirname(pathof(GeneticVariation)))); include(joinpath("docs", "make.jl"))'
