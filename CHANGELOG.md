@@ -5,8 +5,10 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+## [0.4.0] - 2018-11-22
 ### Added
-- :arrow_up: Support for julia v1.0
+- :arrow_up: Support for julia v0.7 / v1.0
 
 ### Changed
 - Fixed an issue with parsing VCF files from recent GATK releases.
