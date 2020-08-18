@@ -77,7 +77,7 @@ for A in (DNAAlphabet, RNAAlphabet)
         @inline function bp_chunk_count(::Type{Mutated}, ::Type{$A{4}}, a::UInt64, b::UInt64)
             m = nibble_mask(Certain, a, b)
             d = (a ⊻ b) & m
-            return count_nonzero_nibbles(d), count_one_nibbles(m)
+            return count_nonzero_nibbles(d), count_1111_nibbles(m)
         end
 
         # TODO Finish transitions and transversions
@@ -85,8 +85,8 @@ for A in (DNAAlphabet, RNAAlphabet)
         @inline function bp_chunk_count(::Type{Transition}, ::Type{$A{4}}, a::UInt64, b::UInt64)
             m = nibble_mask(Certain, a, b)
             d = (a ⊻ b) & m
-            remcount = count_zero_nibbles(d) # Count of the identical nucleotides.
-            tve = count_one_nibbles(nibble_mask(0x9999999999999999, d)) # Count the 1001 transversion edge case.
+            remcount = count_0000_nibbles(d) # Count of the identical nucleotides.
+            tve = count_1111_nibbles(nibble_mask(0x9999999999999999, d)) # Count the 1001 transversion edge case.
             d &= (d >> 1)
             d &= 0x7777777777777777
             tvc = count_ones(d)
