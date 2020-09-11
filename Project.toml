@@ -14,10 +14,10 @@ IntervalTrees = "524e6230-43b7-53ae-be76-1e9e4d08d11b"
 Twiddle = "7200193e-83a8-5a55-b20d-5d36d44a0795"
 
 [compat]
-Automa = "0.8"
+Automa = "0.7, 0.8"
 BGZFStreams = "0.3"
 BioCore = "2.0.5"
-BioSequences = "1.1"
+BioSequences = "1"
 BufferedStreams = "1"
 Combinatorics = "0.7"
 IntervalTrees = "1"
@@ -29,4 +29,4 @@ Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
 YAML = "ddb6d928-2868-570f-bddf-ab3f9cf99eb6"
 
 [targets]
-test = ["Test","YAML"]
+test = ["Test", "YAML"]
