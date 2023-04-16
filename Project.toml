@@ -1,6 +1,7 @@
 name = "GeneticVariation"
 uuid = "9bc6ac9d-e6b2-5f70-b0a8-242a01662520"
-authors = ["Ben J. Ward <benjward@protonmail.com>"]
+authors = ["Kenta Sato <bicycle1885@gmail.com>", "Sabrina J. Ward <sabrinajward@protonmail.com>"]
+
 version = "0.4.1"
 
 [deps]
