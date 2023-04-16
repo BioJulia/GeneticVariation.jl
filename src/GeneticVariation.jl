@@ -73,11 +73,9 @@ import IntervalTrees: Interval, IntervalValue
 import Twiddle:
     enumerate_nibbles,
     nibble_mask,
-    count_zero_nibbles,
+    count_0000_nibbles,
     count_nonzero_nibbles,
-    count_one_nibbles,
-    count_zero_bitpairs,
-    count_nonzero_bitpairs
+    count_1111_nibbles
 
 include("vcf/vcf.jl")
 include("bcf/bcf.jl")
