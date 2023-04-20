@@ -1,0 +1,50 @@
+name: Unit Tests
+
+on:
+  - push
+  - pull_request
+
+jobs:
+  test:
+    name: Julia ${{ matrix.julia-version }} - ${{ matrix.os }} - ${{ matrix.julia-arch }} - ${{ github.event_name }}
+    runs-on: ${{ matrix.os }}
+    continue-on-error: ${{ matrix.julia-version == 'nightly' }}
+    strategy:
+      fail-fast: false
+      matrix:
+        julia-version:
+          - '1.0'
+          - '1.5'
+          - '1.6' # LTS
+          - '1'
+        julia-arch: [x64, x86]
+        os: [ubuntu-latest, windows-latest, macOS-latest]
+        exclude:
+          - os: macOS-latest
+            julia-arch: x86
+        experimental: [false]
+        include:
+          - julia-version: nightly
+            julia-arch: x64
+            os: ubuntu-latest
+            experimental: true
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+      - name: Setup Julia
+        uses: julia-actions/setup-julia@v1
+        with:
+          version: ${{ matrix.julia-version }}
+      - name: Run Tests
+        uses: julia-actions/julia-runtest@v1
+      - name: Create CodeCov
+        uses: julia-actions/julia-processcoverage@v1
+      - name: Upload CodeCov
+        uses: codecov/codecov-action@v1
+        with:
+          file: ./lcov.info
+          flags: unittests
+          name: codecov-umbrella
+          fail_ci_if_error: false
+          token: ${{ secrets.CODECOV_TOKEN }}
